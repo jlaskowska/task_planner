@@ -13,7 +13,8 @@ dependencies:
   drift: 
   sqlite3_flutter_libs: 
   path_provider:
-  path: 
+  path:
+  freezed: 
 
 dev_dependencies:
   flutter_test:
