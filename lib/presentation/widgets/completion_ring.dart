@@ -1,7 +1,32 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
+class TaskCompletionRing extends StatelessWidget {
+  final double progress;
+  final Color taskCompletedColor;
+  final Color taskNotCompletedColor;
+  final Widget? child;
+  const TaskCompletionRing({
+    required this.progress,
+    this.taskCompletedColor = Colors.white,
+    this.taskNotCompletedColor = Colors.black,
+    this.child,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      child: child,
+      painter: CompletionRing(
+        progress: progress,
+        taskCompletedColor: taskCompletedColor,
+        taskNotCompletedColor: taskNotCompletedColor,
+      ),
+    );
+  }
+}
 
 class CompletionRing extends CustomPainter {
   final double progress;
