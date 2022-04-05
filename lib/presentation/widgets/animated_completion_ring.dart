@@ -4,11 +4,19 @@ import 'package:task_planner/presentation/widgets/completion_ring.dart';
 
 class AnimatedComletionRing extends StatefulWidget {
   final double size;
-  final Color color;
-  
+  final Color completedIconColor;
+  final Color uncompletedIconColor;
+  final bool completed;
+  final Color taskCompletedBackgroundColor;
+  final Color arcColor;
+
   const AnimatedComletionRing({
     this.size = 200,
-    this.color = Colors.black,
+    this.completedIconColor = Colors.black87,
+    this.completed = false,
+    this.arcColor = Colors.black45,
+    this.taskCompletedBackgroundColor = Colors.white,
+    this.uncompletedIconColor = Colors.white,
     Key? key,
   }) : super(key: key);
 
@@ -20,6 +28,7 @@ class _AnimatedComletionRingState extends State<AnimatedComletionRing>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _animation;
+  bool _shouldShowCheckIcon = false;
 
   @override
   void initState() {
@@ -28,11 +37,22 @@ class _AnimatedComletionRingState extends State<AnimatedComletionRing>
       vsync: this,
       duration: const Duration(milliseconds: 750),
     );
+
+    _controller.addStatusListener(_checkStatusListner);
     _animation = _controller.drive(CurveTween(curve: Curves.easeInOut));
+  }
+
+  void _checkStatusListner(AnimationStatus status) {
+    if (status == AnimationStatus.completed) {
+      if (mounted) {
+        setState(() => _shouldShowCheckIcon = true);
+      }
+    }
   }
 
   @override
   void dispose() {
+    _controller.removeStatusListener(_checkStatusListner);
     _controller.dispose();
     super.dispose();
   }
@@ -45,7 +65,7 @@ class _AnimatedComletionRingState extends State<AnimatedComletionRing>
     }
   }
 
-  void _onTapUp(TapUpDetails details) {
+  void _onTapUp() {
     if (_controller.status != AnimationStatus.completed) {
       _controller.reverse();
     }
@@ -55,23 +75,33 @@ class _AnimatedComletionRingState extends State<AnimatedComletionRing>
   Widget build(BuildContext context) {
     return GestureDetector(
       onTapDown: _onTapDown,
-      onTapUp: _onTapUp,
+      onTapUp: (_) => _onTapUp(),
+      onTapCancel: _onTapUp,
       child: AnimatedBuilder(
         animation: _animation,
         builder: (context, Widget? child) {
+          final progress = widget.completed ? 1.0 : _animation.value;
+          final hasCompleted = progress == 1.0;
+
           return SizedBox(
             width: widget.size,
             height: widget.size,
             child: TaskCompletionRing(
+              taskNotCompletedColor: widget.arcColor,
+              taskCompletedColor: widget.taskCompletedBackgroundColor,
               child: Center(
                 child: SvgPicture.asset(
-                  'assets/svgs/pen.svg',
-                  height: widget.size * 0.6,
-                  width: widget.size * 0.6,
-                  color: widget.color,
+                  _shouldShowCheckIcon && hasCompleted
+                      ? 'assets/svgs/tick.svg'
+                      : 'assets/svgs/pen.svg',
+                  height: widget.size * 0.55,
+                  width: widget.size * 0.55,
+                  color: hasCompleted
+                      ? widget.completedIconColor
+                      : widget.uncompletedIconColor,
                 ),
               ),
-              progress: _animation.value,
+              progress: progress,
             ),
           );
         },
