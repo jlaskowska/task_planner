@@ -10,7 +10,7 @@ class TaskCompletionRing extends StatelessWidget {
   const TaskCompletionRing({
     required this.progress,
     this.taskCompletedColor = Colors.white,
-    this.taskNotCompletedColor = Colors.black,
+    this.taskNotCompletedColor = Colors.black45,
     this.child,
     Key? key,
   }) : super(key: key);
@@ -40,23 +40,26 @@ class CompletionRing extends CustomPainter {
   });
   @override
   void paint(Canvas canvas, Size size) {
+    final notCompleted = progress < 1.0;
     final strokeWidth = size.width / 15;
     final center = Offset(size.height / 2, size.width / 2);
-    final radius = (size.width - strokeWidth) / 2;
+    final radius =
+        notCompleted ? (size.width - strokeWidth) / 2 : size.width / 2;
+    if (notCompleted) {
+      final background = Paint()
+        ..isAntiAlias = true
+        ..strokeWidth = strokeWidth
+        ..color = taskNotCompletedColor
+        ..style = PaintingStyle.stroke;
 
-    final background = Paint()
-      ..isAntiAlias = true
-      ..strokeWidth = strokeWidth
-      ..color = taskNotCompletedColor
-      ..style = PaintingStyle.stroke;
+      canvas.drawCircle(center, radius, background);
+    }
 
     final foreground = Paint()
       ..isAntiAlias = true
       ..strokeWidth = strokeWidth
       ..color = taskCompletedColor
-      ..style = PaintingStyle.stroke;
-
-    canvas.drawCircle(center, radius, background);
+      ..style = notCompleted ? PaintingStyle.stroke : PaintingStyle.fill;
 
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
