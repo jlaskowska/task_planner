@@ -2,29 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:task_planner/presentation/widgets/completion_ring.dart';
 
-class AnimatedComletionRing extends StatefulWidget {
+class AnimatedCompletionRing extends StatefulWidget {
   final double size;
   final Color completedIconColor;
   final Color uncompletedIconColor;
   final bool completed;
   final Color taskCompletedBackgroundColor;
   final Color arcColor;
+  final void Function(bool) onAnimationCompleted;
 
-  const AnimatedComletionRing({
+  const AnimatedCompletionRing({
     this.size = 200,
     this.completedIconColor = Colors.black87,
     this.completed = false,
     this.arcColor = Colors.black45,
     this.taskCompletedBackgroundColor = Colors.white,
     this.uncompletedIconColor = Colors.white,
+    required this.onAnimationCompleted,
     Key? key,
   }) : super(key: key);
 
   @override
-  State<AnimatedComletionRing> createState() => _AnimatedComletionRingState();
+  State<AnimatedCompletionRing> createState() => _AnimatedCompletionRingState();
 }
 
-class _AnimatedComletionRingState extends State<AnimatedComletionRing>
+class _AnimatedCompletionRingState extends State<AnimatedCompletionRing>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _animation;
@@ -44,6 +46,7 @@ class _AnimatedComletionRingState extends State<AnimatedComletionRing>
 
   void _checkStatusListner(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
+      widget.onAnimationCompleted(true);
       if (mounted) {
         setState(() => _shouldShowCheckIcon = true);
       }
@@ -61,6 +64,7 @@ class _AnimatedComletionRingState extends State<AnimatedComletionRing>
     if (_controller.status != AnimationStatus.completed) {
       _controller.forward();
     } else {
+      widget.onAnimationCompleted(false);
       _controller.value = 0.0;
     }
   }
@@ -90,15 +94,18 @@ class _AnimatedComletionRingState extends State<AnimatedComletionRing>
               taskNotCompletedColor: widget.arcColor,
               taskCompletedColor: widget.taskCompletedBackgroundColor,
               child: Center(
-                child: SvgPicture.asset(
-                  _shouldShowCheckIcon && hasCompleted
-                      ? 'assets/svgs/tick.svg'
-                      : 'assets/svgs/pen.svg',
-                  height: widget.size * 0.55,
-                  width: widget.size * 0.55,
-                  color: hasCompleted
-                      ? widget.completedIconColor
-                      : widget.uncompletedIconColor,
+                child: AspectRatio(
+                  aspectRatio: 1.7,
+                  child: SvgPicture.asset(
+                    _shouldShowCheckIcon && hasCompleted
+                        ? 'assets/svgs/tick.svg'
+                        : 'assets/svgs/pen.svg',
+                    height: widget.size * 0.55,
+                    width: widget.size * 0.55,
+                    color: hasCompleted
+                        ? widget.completedIconColor
+                        : widget.uncompletedIconColor,
+                  ),
                 ),
               ),
               progress: progress,
