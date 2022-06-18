@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:task_planner/domain/tasks_database/tag_entity.dart';
 
 part 'task_entity.freezed.dart';
 
@@ -8,5 +9,6 @@ class TaskEntity with _$TaskEntity {
     required String title,
     required String id,
     required bool isCompleted,
+    TagEntity? tag,
   }) = _TaskEntity;
 }

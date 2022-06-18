@@ -19,11 +19,15 @@ class _$TaskEntityTearOff {
   const _$TaskEntityTearOff();
 
   _TaskEntity call(
-      {required String title, required String id, required bool isCompleted}) {
+      {required String title,
+      required String id,
+      required bool isCompleted,
+      TagEntity? tag}) {
     return _TaskEntity(
       title: title,
       id: id,
       isCompleted: isCompleted,
+      tag: tag,
     );
   }
 }
@@ -36,6 +40,7 @@ mixin _$TaskEntity {
   String get title => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
   bool get isCompleted => throw _privateConstructorUsedError;
+  TagEntity? get tag => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TaskEntityCopyWith<TaskEntity> get copyWith =>
@@ -47,7 +52,9 @@ abstract class $TaskEntityCopyWith<$Res> {
   factory $TaskEntityCopyWith(
           TaskEntity value, $Res Function(TaskEntity) then) =
       _$TaskEntityCopyWithImpl<$Res>;
-  $Res call({String title, String id, bool isCompleted});
+  $Res call({String title, String id, bool isCompleted, TagEntity? tag});
+
+  $TagEntityCopyWith<$Res>? get tag;
 }
 
 /// @nodoc
@@ -63,6 +70,7 @@ class _$TaskEntityCopyWithImpl<$Res> implements $TaskEntityCopyWith<$Res> {
     Object? title = freezed,
     Object? id = freezed,
     Object? isCompleted = freezed,
+    Object? tag = freezed,
   }) {
     return _then(_value.copyWith(
       title: title == freezed
@@ -77,7 +85,22 @@ class _$TaskEntityCopyWithImpl<$Res> implements $TaskEntityCopyWith<$Res> {
           ? _value.isCompleted
           : isCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
+      tag: tag == freezed
+          ? _value.tag
+          : tag // ignore: cast_nullable_to_non_nullable
+              as TagEntity?,
     ));
+  }
+
+  @override
+  $TagEntityCopyWith<$Res>? get tag {
+    if (_value.tag == null) {
+      return null;
+    }
+
+    return $TagEntityCopyWith<$Res>(_value.tag!, (value) {
+      return _then(_value.copyWith(tag: value));
+    });
   }
 }
 
@@ -87,7 +110,10 @@ abstract class _$TaskEntityCopyWith<$Res> implements $TaskEntityCopyWith<$Res> {
           _TaskEntity value, $Res Function(_TaskEntity) then) =
       __$TaskEntityCopyWithImpl<$Res>;
   @override
-  $Res call({String title, String id, bool isCompleted});
+  $Res call({String title, String id, bool isCompleted, TagEntity? tag});
+
+  @override
+  $TagEntityCopyWith<$Res>? get tag;
 }
 
 /// @nodoc
@@ -105,6 +131,7 @@ class __$TaskEntityCopyWithImpl<$Res> extends _$TaskEntityCopyWithImpl<$Res>
     Object? title = freezed,
     Object? id = freezed,
     Object? isCompleted = freezed,
+    Object? tag = freezed,
   }) {
     return _then(_TaskEntity(
       title: title == freezed
@@ -119,6 +146,10 @@ class __$TaskEntityCopyWithImpl<$Res> extends _$TaskEntityCopyWithImpl<$Res>
           ? _value.isCompleted
           : isCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
+      tag: tag == freezed
+          ? _value.tag
+          : tag // ignore: cast_nullable_to_non_nullable
+              as TagEntity?,
     ));
   }
 }
@@ -127,7 +158,10 @@ class __$TaskEntityCopyWithImpl<$Res> extends _$TaskEntityCopyWithImpl<$Res>
 
 class _$_TaskEntity implements _TaskEntity {
   const _$_TaskEntity(
-      {required this.title, required this.id, required this.isCompleted});
+      {required this.title,
+      required this.id,
+      required this.isCompleted,
+      this.tag});
 
   @override
   final String title;
@@ -135,10 +169,12 @@ class _$_TaskEntity implements _TaskEntity {
   final String id;
   @override
   final bool isCompleted;
+  @override
+  final TagEntity? tag;
 
   @override
   String toString() {
-    return 'TaskEntity(title: $title, id: $id, isCompleted: $isCompleted)';
+    return 'TaskEntity(title: $title, id: $id, isCompleted: $isCompleted, tag: $tag)';
   }
 
   @override
@@ -149,7 +185,8 @@ class _$_TaskEntity implements _TaskEntity {
             const DeepCollectionEquality().equals(other.title, title) &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality()
-                .equals(other.isCompleted, isCompleted));
+                .equals(other.isCompleted, isCompleted) &&
+            const DeepCollectionEquality().equals(other.tag, tag));
   }
 
   @override
@@ -157,7 +194,8 @@ class _$_TaskEntity implements _TaskEntity {
       runtimeType,
       const DeepCollectionEquality().hash(title),
       const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(isCompleted));
+      const DeepCollectionEquality().hash(isCompleted),
+      const DeepCollectionEquality().hash(tag));
 
   @JsonKey(ignore: true)
   @override
@@ -169,7 +207,8 @@ abstract class _TaskEntity implements TaskEntity {
   const factory _TaskEntity(
       {required String title,
       required String id,
-      required bool isCompleted}) = _$_TaskEntity;
+      required bool isCompleted,
+      TagEntity? tag}) = _$_TaskEntity;
 
   @override
   String get title;
@@ -177,6 +216,8 @@ abstract class _TaskEntity implements TaskEntity {
   String get id;
   @override
   bool get isCompleted;
+  @override
+  TagEntity? get tag;
   @override
   @JsonKey(ignore: true)
   _$TaskEntityCopyWith<_TaskEntity> get copyWith =>
