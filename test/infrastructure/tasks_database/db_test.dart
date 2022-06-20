@@ -5,10 +5,10 @@ import 'package:task_planner/infrastructure/tasks_database/db.dart';
 
 void main() {
   group('Database', () {
-    late TasksDatabase db;
+    late Database db;
 
     setUp(() {
-      db = TasksDatabase(NativeDatabase.memory());
+      db = Database(NativeDatabase.memory());
     });
 
     tearDown(() async {
