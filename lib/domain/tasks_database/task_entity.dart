@@ -6,8 +6,8 @@ part 'task_entity.freezed.dart';
 @freezed
 class TaskEntity with _$TaskEntity {
   const factory TaskEntity({
+    required int id,
     required String title,
-    required String id,
     required bool isCompleted,
     TagEntity? tag,
   }) = _TaskEntity;

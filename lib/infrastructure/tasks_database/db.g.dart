@@ -8,7 +8,7 @@ part of 'db.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
 class Task extends DataClass implements Insertable<Task> {
-  final String id;
+  final int id;
   final String? tag;
   final String title;
   final bool completed;
@@ -20,7 +20,7 @@ class Task extends DataClass implements Insertable<Task> {
   factory Task.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return Task(
-      id: const StringType()
+      id: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       tag: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}tag']),
@@ -33,7 +33,7 @@ class Task extends DataClass implements Insertable<Task> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
+    map['id'] = Variable<int>(id);
     if (!nullToAbsent || tag != null) {
       map['tag'] = Variable<String?>(tag);
     }
@@ -55,7 +55,7 @@ class Task extends DataClass implements Insertable<Task> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Task(
-      id: serializer.fromJson<String>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       tag: serializer.fromJson<String?>(json['tag']),
       title: serializer.fromJson<String>(json['title']),
       completed: serializer.fromJson<bool>(json['completed']),
@@ -65,15 +65,14 @@ class Task extends DataClass implements Insertable<Task> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
+      'id': serializer.toJson<int>(id),
       'tag': serializer.toJson<String?>(tag),
       'title': serializer.toJson<String>(title),
       'completed': serializer.toJson<bool>(completed),
     };
   }
 
-  Task copyWith({String? id, String? tag, String? title, bool? completed}) =>
-      Task(
+  Task copyWith({int? id, String? tag, String? title, bool? completed}) => Task(
         id: id ?? this.id,
         tag: tag ?? this.tag,
         title: title ?? this.title,
@@ -103,7 +102,7 @@ class Task extends DataClass implements Insertable<Task> {
 }
 
 class TasksCompanion extends UpdateCompanion<Task> {
-  final Value<String> id;
+  final Value<int> id;
   final Value<String?> tag;
   final Value<String> title;
   final Value<bool> completed;
@@ -114,14 +113,13 @@ class TasksCompanion extends UpdateCompanion<Task> {
     this.completed = const Value.absent(),
   });
   TasksCompanion.insert({
-    required String id,
+    this.id = const Value.absent(),
     this.tag = const Value.absent(),
     required String title,
     this.completed = const Value.absent(),
-  })  : id = Value(id),
-        title = Value(title);
+  }) : title = Value(title);
   static Insertable<Task> custom({
-    Expression<String>? id,
+    Expression<int>? id,
     Expression<String?>? tag,
     Expression<String>? title,
     Expression<bool>? completed,
@@ -135,7 +133,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
   }
 
   TasksCompanion copyWith(
-      {Value<String>? id,
+      {Value<int>? id,
       Value<String?>? tag,
       Value<String>? title,
       Value<bool>? completed}) {
@@ -151,7 +149,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<String>(id.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (tag.present) {
       map['tag'] = Variable<String?>(tag.value);
@@ -183,9 +181,11 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
   $TasksTable(this._db, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
       'id', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _tagMeta = const VerificationMeta('tag');
   @override
   late final GeneratedColumn<String?> tag = GeneratedColumn<String?>(
@@ -222,8 +222,6 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('tag')) {
       context.handle(

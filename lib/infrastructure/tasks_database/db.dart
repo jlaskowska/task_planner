@@ -14,13 +14,14 @@ part 'db.g.dart';
 
 @DriftDatabase(tables: [Tasks, Tags])
 class TasksDatabase extends _$TasksDatabase implements ITasksDatabase {
-  TasksDatabase() : super(_openConnection());
+  TasksDatabase([QueryExecutor? executor])
+      : super(executor ?? _openConnection());
 
   @override
   int get schemaVersion => 1;
 
   @override
-  Future<void> completeTask(String id) async {
+  Future<void> completeTask(int id) async {
     (update(tasks)..where((task) => task.id.equals(id))).write(
       const TasksCompanion(
         completed: Value(true),
@@ -29,8 +30,10 @@ class TasksDatabase extends _$TasksDatabase implements ITasksDatabase {
   }
 
   @override
-  Future<void> createTask(
-      {required String title, required String id, String? tag}) async {
+  Future<void> createTask({
+    required String title,
+    String? tag,
+  }) async {
     if (tag != null) {
       final tagObject = await (select(tags)
             ..where((tag1) => tag1.label.equals(tag)))
@@ -39,12 +42,16 @@ class TasksDatabase extends _$TasksDatabase implements ITasksDatabase {
         await addTag(tag);
       }
     }
-    final task = Task(title: title, id: id, tag: tag, completed: false);
-    into(tasks).insert(task);
+    final task = TasksCompanion(
+      title: Value(title),
+      tag: Value(tag),
+      completed: const Value(false),
+    );
+    await into(tasks).insert(task);
   }
 
   @override
-  Future<void> deleteTask(String id) =>
+  Future<void> deleteTask(int id) =>
       (delete(tasks)..where((task) => task.id.equals(id))).go();
 
   @override
@@ -52,9 +59,9 @@ class TasksDatabase extends _$TasksDatabase implements ITasksDatabase {
       select(tasks).map((task) => TasksMapper.infToDom(task)).get();
 
   @override
-  Future<TaskEntity> getTask(String id) => _getTaskQuery(id).getSingle();
+  Future<TaskEntity> getTask(int id) => _getTaskQuery(id).getSingle();
 
-  SingleSelectable<TaskEntity> _getTaskQuery(String id) =>
+  SingleSelectable<TaskEntity> _getTaskQuery(int id) =>
       (select(tasks)..where((task) => task.id.equals(id)))
           .map((task) => TasksMapper.infToDom(task));
 
@@ -74,7 +81,7 @@ class TasksDatabase extends _$TasksDatabase implements ITasksDatabase {
 
   @override
   Future<void> deleteTag(String label) async {
-    // DODO Update all taks that have tag
+    // DODO Update all tasks that have tag
     (delete(tags)..where((tag) => tag.label.equals(label))).go();
   }
 }
@@ -83,7 +90,6 @@ LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(join(dbFolder.path, 'db.sqlite'));
-    print(file.path);
     return NativeDatabase(file);
   });
 }
