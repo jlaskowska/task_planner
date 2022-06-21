@@ -19,11 +19,15 @@ class _$TaskEntityTearOff {
   const _$TaskEntityTearOff();
 
   _TaskEntity call(
-      {required String title, required String id, required bool isCompleted}) {
+      {required int id,
+      required String title,
+      required bool isCompleted,
+      TagEntity? tag}) {
     return _TaskEntity(
-      title: title,
       id: id,
+      title: title,
       isCompleted: isCompleted,
+      tag: tag,
     );
   }
 }
@@ -33,9 +37,10 @@ const $TaskEntity = _$TaskEntityTearOff();
 
 /// @nodoc
 mixin _$TaskEntity {
+  int get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
-  String get id => throw _privateConstructorUsedError;
   bool get isCompleted => throw _privateConstructorUsedError;
+  TagEntity? get tag => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TaskEntityCopyWith<TaskEntity> get copyWith =>
@@ -47,7 +52,9 @@ abstract class $TaskEntityCopyWith<$Res> {
   factory $TaskEntityCopyWith(
           TaskEntity value, $Res Function(TaskEntity) then) =
       _$TaskEntityCopyWithImpl<$Res>;
-  $Res call({String title, String id, bool isCompleted});
+  $Res call({int id, String title, bool isCompleted, TagEntity? tag});
+
+  $TagEntityCopyWith<$Res>? get tag;
 }
 
 /// @nodoc
@@ -60,24 +67,40 @@ class _$TaskEntityCopyWithImpl<$Res> implements $TaskEntityCopyWith<$Res> {
 
   @override
   $Res call({
-    Object? title = freezed,
     Object? id = freezed,
+    Object? title = freezed,
     Object? isCompleted = freezed,
+    Object? tag = freezed,
   }) {
     return _then(_value.copyWith(
-      title: title == freezed
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      title: title == freezed
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
               as String,
       isCompleted: isCompleted == freezed
           ? _value.isCompleted
           : isCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
+      tag: tag == freezed
+          ? _value.tag
+          : tag // ignore: cast_nullable_to_non_nullable
+              as TagEntity?,
     ));
+  }
+
+  @override
+  $TagEntityCopyWith<$Res>? get tag {
+    if (_value.tag == null) {
+      return null;
+    }
+
+    return $TagEntityCopyWith<$Res>(_value.tag!, (value) {
+      return _then(_value.copyWith(tag: value));
+    });
   }
 }
 
@@ -87,7 +110,10 @@ abstract class _$TaskEntityCopyWith<$Res> implements $TaskEntityCopyWith<$Res> {
           _TaskEntity value, $Res Function(_TaskEntity) then) =
       __$TaskEntityCopyWithImpl<$Res>;
   @override
-  $Res call({String title, String id, bool isCompleted});
+  $Res call({int id, String title, bool isCompleted, TagEntity? tag});
+
+  @override
+  $TagEntityCopyWith<$Res>? get tag;
 }
 
 /// @nodoc
@@ -102,23 +128,28 @@ class __$TaskEntityCopyWithImpl<$Res> extends _$TaskEntityCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? title = freezed,
     Object? id = freezed,
+    Object? title = freezed,
     Object? isCompleted = freezed,
+    Object? tag = freezed,
   }) {
     return _then(_TaskEntity(
-      title: title == freezed
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      title: title == freezed
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
               as String,
       isCompleted: isCompleted == freezed
           ? _value.isCompleted
           : isCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
+      tag: tag == freezed
+          ? _value.tag
+          : tag // ignore: cast_nullable_to_non_nullable
+              as TagEntity?,
     ));
   }
 }
@@ -127,18 +158,23 @@ class __$TaskEntityCopyWithImpl<$Res> extends _$TaskEntityCopyWithImpl<$Res>
 
 class _$_TaskEntity implements _TaskEntity {
   const _$_TaskEntity(
-      {required this.title, required this.id, required this.isCompleted});
+      {required this.id,
+      required this.title,
+      required this.isCompleted,
+      this.tag});
 
+  @override
+  final int id;
   @override
   final String title;
   @override
-  final String id;
-  @override
   final bool isCompleted;
+  @override
+  final TagEntity? tag;
 
   @override
   String toString() {
-    return 'TaskEntity(title: $title, id: $id, isCompleted: $isCompleted)';
+    return 'TaskEntity(id: $id, title: $title, isCompleted: $isCompleted, tag: $tag)';
   }
 
   @override
@@ -146,18 +182,20 @@ class _$_TaskEntity implements _TaskEntity {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _TaskEntity &&
-            const DeepCollectionEquality().equals(other.title, title) &&
             const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.title, title) &&
             const DeepCollectionEquality()
-                .equals(other.isCompleted, isCompleted));
+                .equals(other.isCompleted, isCompleted) &&
+            const DeepCollectionEquality().equals(other.tag, tag));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(title),
       const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(isCompleted));
+      const DeepCollectionEquality().hash(title),
+      const DeepCollectionEquality().hash(isCompleted),
+      const DeepCollectionEquality().hash(tag));
 
   @JsonKey(ignore: true)
   @override
@@ -167,16 +205,19 @@ class _$_TaskEntity implements _TaskEntity {
 
 abstract class _TaskEntity implements TaskEntity {
   const factory _TaskEntity(
-      {required String title,
-      required String id,
-      required bool isCompleted}) = _$_TaskEntity;
+      {required int id,
+      required String title,
+      required bool isCompleted,
+      TagEntity? tag}) = _$_TaskEntity;
 
+  @override
+  int get id;
   @override
   String get title;
   @override
-  String get id;
-  @override
   bool get isCompleted;
+  @override
+  TagEntity? get tag;
   @override
   @JsonKey(ignore: true)
   _$TaskEntityCopyWith<_TaskEntity> get copyWith =>
