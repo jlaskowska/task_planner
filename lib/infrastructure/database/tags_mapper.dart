@@ -1,5 +1,5 @@
-import 'package:task_planner/domain/tasks_database/tag_entity.dart';
-import 'package:task_planner/infrastructure/tasks_database/db.dart';
+import 'package:task_planner/domain/database/tag_entity.dart';
+import 'package:task_planner/infrastructure/database/db.dart';
 
 class TagsMapper {
   TagsMapper._();

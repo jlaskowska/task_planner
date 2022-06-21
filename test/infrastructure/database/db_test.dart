@@ -1,7 +1,8 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:task_planner/domain/tasks_database/task_entity.dart';
-import 'package:task_planner/infrastructure/tasks_database/db.dart';
+import 'package:task_planner/domain/database/tag_entity.dart';
+import 'package:task_planner/domain/database/task_entity.dart';
+import 'package:task_planner/infrastructure/database/db.dart';
 
 void main() {
   group('Database', () {
@@ -14,6 +15,7 @@ void main() {
     tearDown(() async {
       await db.close();
     });
+
     const title = 'title';
 
     group('createTask', () {
@@ -101,8 +103,8 @@ void main() {
       group('when task exists in db', () {
         test('expect task is returned', () async {
           const taskEntity =
-              TaskEntity(id: 1, title: 'title', isCompleted: false);
-          final task = Task(id: 1, title: 'title', completed: false);
+              TaskEntity(id: 1, title: title, isCompleted: false);
+          final task = Task(id: 1, title: title, completed: false);
 
           await db.into(db.tasks).insert(task);
 
@@ -142,7 +144,7 @@ void main() {
       group('when tasks exist in db', () {
         test('expect all tasks are returned', () async {
           const taskEntity =
-              TaskEntity(id: 1, title: 'title', isCompleted: false);
+              TaskEntity(id: 1, title: title, isCompleted: false);
 
           await db.createTask(title: title);
           final allTasks = await db.getAllTasks();
@@ -179,6 +181,82 @@ void main() {
         await db.createTask(title: title);
 
         await expectation;
+      });
+    });
+    group('addTag', () {
+      test('expect tag is added to db', () async {
+        final tag = Tag(label: 'label');
+        await db.addTag('label');
+
+        final expectation = expectLater(
+          db.select(db.tags).watch(),
+          emitsInOrder([
+            [tag],
+          ]),
+        );
+
+        await expectation;
+      });
+    });
+    group('getAllTags', () {
+      group('when tags exist in db', () {
+        test('expect all tags are returned', () async {
+          const tag = TagEntity(label: 'label');
+
+          await db.addTag('label');
+          final allTags = await db.getAllTags();
+
+          expect(allTags, [tag]);
+        });
+      });
+
+      group('when tags do not exist in db', () {
+        test('expect empty []', () async {
+          final allTags = await db.getAllTags();
+
+          expect(allTags, []);
+        });
+      });
+    });
+    group('deleteTag', () {
+      group('when tag exists in db', () {
+        test('expect a tag is deleted from db and tasks are updated', () async {
+          const tag = 'tag';
+          const task = TaskEntity(
+            id: 1,
+            title: title,
+            tag: TagEntity(label: tag),
+            isCompleted: false,
+          );
+          const taskWithoutTag = TaskEntity(
+            id: 1,
+            title: title,
+            isCompleted: false,
+          );
+          final tagDTO = Tag(label: tag);
+
+          await db.createTask(title: title, tag: tag);
+
+          final expectationA = expectLater(
+            db.watchAllTasks(),
+            emitsInOrder([
+              [task],
+              [taskWithoutTag]
+            ]),
+          );
+
+          final expectationB = expectLater(
+            db.select(db.tags).watch(),
+            emitsInOrder([
+              [tagDTO],
+              []
+            ]),
+          );
+          await db.deleteTag(tag);
+
+          await expectationA;
+          await expectationB;
+        });
       });
     });
   });

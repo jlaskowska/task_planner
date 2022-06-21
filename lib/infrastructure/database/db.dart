@@ -4,14 +4,14 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:task_planner/domain/tasks_database/i_tag_database.dart';
-import 'package:task_planner/domain/tasks_database/i_tasks_database.dart';
-import 'package:task_planner/domain/tasks_database/tag_entity.dart';
-import 'package:task_planner/domain/tasks_database/task_entity.dart';
-import 'package:task_planner/infrastructure/tasks_database/tables/tags.dart';
-import 'package:task_planner/infrastructure/tasks_database/tables/tasks.dart';
-import 'package:task_planner/infrastructure/tasks_database/tags_mapper.dart';
-import 'package:task_planner/infrastructure/tasks_database/tasks_mapper.dart';
+import 'package:task_planner/domain/database/i_tag_database.dart';
+import 'package:task_planner/domain/database/i_tasks_database.dart';
+import 'package:task_planner/domain/database/tag_entity.dart';
+import 'package:task_planner/domain/database/task_entity.dart';
+import 'package:task_planner/infrastructure/database/tables/tags.dart';
+import 'package:task_planner/infrastructure/database/tables/tasks.dart';
+import 'package:task_planner/infrastructure/database/tags_mapper.dart';
+import 'package:task_planner/infrastructure/database/tasks_mapper.dart';
 
 part 'db.g.dart';
 

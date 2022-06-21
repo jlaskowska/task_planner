@@ -1,4 +1,5 @@
-import 'package:task_planner/domain/tasks_database/task_entity.dart';
+
+import 'package:task_planner/domain/database/task_entity.dart';
 
 abstract class ITasksDatabase {
   Future<void> createTask({required String title, String? tag});

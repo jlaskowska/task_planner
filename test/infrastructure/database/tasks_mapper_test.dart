@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:task_planner/domain/tasks_database/task_entity.dart';
-import 'package:task_planner/infrastructure/tasks_database/db.dart';
-import 'package:task_planner/infrastructure/tasks_database/tasks_mapper.dart';
+import 'package:task_planner/domain/database/task_entity.dart';
+import 'package:task_planner/infrastructure/database/db.dart';
+import 'package:task_planner/infrastructure/database/tasks_mapper.dart';
 
 void main() {
   group('$TasksMapper', () {
