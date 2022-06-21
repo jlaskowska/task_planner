@@ -17,11 +17,12 @@ void main() {
     });
 
     const title = 'title';
+    const id = 1;
 
     group('createTask', () {
       group('when no label is given', () {
         test('expect task is inserted into db', () async {
-          final task = Task(id: 1, title: title, completed: false);
+          final task = Task(id: id, title: title, completed: false);
 
           await db.createTask(title: title);
 
@@ -39,7 +40,7 @@ void main() {
       group('when label is given', () {
         const tag = 'tag';
         final task = Task(
-          id: 1,
+          id: id,
           title: title,
           tag: tag,
           completed: false,
@@ -98,13 +99,13 @@ void main() {
     });
 
     group('getTask', () {
-      const id = 1;
+      
 
       group('when task exists in db', () {
         test('expect task is returned', () async {
           const taskEntity =
-              TaskEntity(id: 1, title: title, isCompleted: false);
-          final task = Task(id: 1, title: title, completed: false);
+              TaskEntity(id: id, title: title, isCompleted: false);
+          final task = Task(id: id, title: title, completed: false);
 
           await db.into(db.tasks).insert(task);
 
@@ -123,7 +124,7 @@ void main() {
 
     group('deleteTask', () {
       test('expect task is deleted from db', () async {
-        final task = Task(id: 1, title: title, completed: false);
+        final task = Task(id: id, title: title, completed: false);
 
         await db.createTask(title: title);
 
@@ -144,7 +145,7 @@ void main() {
       group('when tasks exist in db', () {
         test('expect all tasks are returned', () async {
           const taskEntity =
-              TaskEntity(id: 1, title: title, isCompleted: false);
+              TaskEntity(id: id, title: title, isCompleted: false);
 
           await db.createTask(title: title);
           final allTasks = await db.getAllTasks();
@@ -223,13 +224,13 @@ void main() {
         test('expect a tag is deleted from db and tasks are updated', () async {
           const tag = 'tag';
           const task = TaskEntity(
-            id: 1,
+            id: id,
             title: title,
             tag: TagEntity(label: tag),
             isCompleted: false,
           );
           const taskWithoutTag = TaskEntity(
-            id: 1,
+            id: id,
             title: title,
             isCompleted: false,
           );
