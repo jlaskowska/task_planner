@@ -16,6 +16,8 @@ dependencies:
   path:
   freezed:
   flutter_svg: 
+  routemaster:
+  flutter_riverpod:
 
 dev_dependencies:
   flutter_test:
