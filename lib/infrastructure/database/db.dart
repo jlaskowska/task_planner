@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:meta/meta.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:task_planner/domain/database/i_tag_database.dart';
@@ -17,7 +18,12 @@ part 'db.g.dart';
 
 @DriftDatabase(tables: [Tasks, Tags])
 class Database extends _$TasksDatabase implements ITasksDatabase, ITagDatabase {
+  @visibleForTesting
   Database([QueryExecutor? executor]) : super(executor ?? _openConnection());
+
+  static Database? _instance;
+
+  static Database get instance => _instance ??= Database();
 
   @override
   int get schemaVersion => 1;
