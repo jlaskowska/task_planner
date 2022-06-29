@@ -34,9 +34,7 @@ class _TaskTileState extends State<TaskTile> {
   void didUpdateWidget(covariant TaskTile oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // setState(() {
     _isCompleted = widget.isCompleted;
-    // });
   }
 
   @override
