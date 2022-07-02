@@ -1,10 +1,5 @@
-import 'dart:io';
-
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
 import 'package:meta/meta.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:task_planner/domain/database/i_tag_database.dart';
 import 'package:task_planner/domain/database/i_tasks_database.dart';
 import 'package:task_planner/domain/database/tag_entity.dart';
@@ -19,11 +14,23 @@ part 'db.g.dart';
 @DriftDatabase(tables: [Tasks, Tags])
 class Database extends _$Database implements ITasksDatabase, ITagDatabase {
   @visibleForTesting
-  Database([QueryExecutor? executor]) : super(executor ?? _openConnection());
+  Database(QueryExecutor executor) : super(executor);
 
   static Database? _instance;
 
-  static Database get instance => _instance ??= Database();
+  static Database get instance {
+    if (_instance == null) {
+      throw ('db needs to be initialized');
+    }
+
+    return _instance!;
+  }
+
+  static void initialize(QueryExecutor executor) {
+    assert(_instance == null);
+
+    _instance = Database(executor);
+  }
 
   @override
   int get schemaVersion => 1;
@@ -100,12 +107,4 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
   @override
   Future<List<TagEntity>> getAllTags() =>
       select(tags).map((tag) => TagsMapper.infToDom(tag)).get();
-}
-
-LazyDatabase _openConnection() {
-  return LazyDatabase(() async {
-    final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(join(dbFolder.path, 'db.sqlite'));
-    return NativeDatabase(file);
-  });
 }
