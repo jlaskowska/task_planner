@@ -17,7 +17,7 @@ import 'package:task_planner/infrastructure/database/tasks_mapper.dart';
 part 'db.g.dart';
 
 @DriftDatabase(tables: [Tasks, Tags])
-class Database extends _$TasksDatabase implements ITasksDatabase, ITagDatabase {
+class Database extends _$Database implements ITasksDatabase, ITagDatabase {
   @visibleForTesting
   Database([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
