@@ -38,7 +38,7 @@ class Database extends _$TasksDatabase implements ITasksDatabase, ITagDatabase {
   }
 
   @override
-  Future<void> createTask({
+  Future<TaskEntity> createTask({
     required String title,
     String? tag,
   }) async {
@@ -50,12 +50,14 @@ class Database extends _$TasksDatabase implements ITasksDatabase, ITagDatabase {
         await addTag(tag);
       }
     }
-    final task = TasksCompanion(
+    final taskCompanion = TasksCompanion(
       title: Value(title),
       tag: Value(tag),
       completed: const Value(false),
     );
-    await into(tasks).insert(task);
+    final id = await into(tasks).insert(taskCompanion);
+
+    return getTask(id);
   }
 
   @override
