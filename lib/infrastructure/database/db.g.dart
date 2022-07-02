@@ -198,7 +198,7 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
   late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
       'title', aliasedName, false,
       additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 32),
+          GeneratedColumn.checkTextLength(minTextLength: 0, maxTextLength: 32),
       type: const StringType(),
       requiredDuringInsert: true);
   final VerificationMeta _completedMeta = const VerificationMeta('completed');
@@ -396,8 +396,8 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
   }
 }
 
-abstract class _$TasksDatabase extends GeneratedDatabase {
-  _$TasksDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
+abstract class _$Database extends GeneratedDatabase {
+  _$Database(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $TasksTable tasks = $TasksTable(this);
   late final $TagsTable tags = $TagsTable(this);
   @override

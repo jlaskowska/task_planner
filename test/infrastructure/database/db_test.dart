@@ -25,7 +25,6 @@ void main() {
           final task = Task(id: id, title: title, completed: false);
 
           await db.createTask(title: title);
-
           final expectation = expectLater(
             db.select(db.tasks).watch(),
             emitsInOrder([
@@ -99,8 +98,6 @@ void main() {
     });
 
     group('getTask', () {
-      
-
       group('when task exists in db', () {
         test('expect task is returned', () async {
           const taskEntity =

@@ -34,9 +34,7 @@ class _TaskTileState extends State<TaskTile> {
   void didUpdateWidget(covariant TaskTile oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // setState(() {
     _isCompleted = widget.isCompleted;
-    // });
   }
 
   @override
@@ -44,13 +42,13 @@ class _TaskTileState extends State<TaskTile> {
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 350),
       opacity: _isCompleted ? 0.5 : 1,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        elevation: 8,
-        child: GestureDetector(
-          onTap: widget.onTap,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 8,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

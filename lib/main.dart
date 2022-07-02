@@ -1,36 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:task_planner/presentation/widgets/task_tile.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
+import 'package:task_planner/routes.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(const ProviderScope(child: MyApp()));
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  var _isTaskComplete = false;
-
-  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Welcome to Flutter'),
-        ),
-        body: Column(
-          children: [
-            TaskTile(
-              title: 'Walk the dog',
-              isCompleted: _isTaskComplete,
-              onChanged: (value) => setState(() => _isTaskComplete = value),
-              onTap: () {},
-            ),
-          ],
-        ),
-      ),
+    return MaterialApp.router(
+      routerDelegate: RoutemasterDelegate(routesBuilder: (_) => routes),
+      routeInformationParser: const RoutemasterParser(),
     );
   }
 }
+
+
