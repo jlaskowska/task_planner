@@ -2,47 +2,73 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 final lightTheme = ThemeData(
-  appBarTheme: const AppBarTheme(
+  appBarTheme: AppBarTheme(
     elevation: 0,
-    backgroundColor: AppColors.tagBlue,
+    backgroundColor: _lightColors.appBarColor,
   ),
   fontFamily: GoogleFonts.quicksand().fontFamily,
-  primaryColor: AppColors.primaryBlue,
-  primaryColorLight: AppColors.lightBlue,
-  scaffoldBackgroundColor: Colors.white,
+  primaryColor: _lightColors.primaryColor,
+  primaryColorLight: _lightColors.primaryColorLight,
+  scaffoldBackgroundColor: _lightColors.scaffoldBackgroundColor,
   textTheme: TextTheme(
     bodyText2: const TextTheme().bodyText2?.copyWith(
-          color: AppColors.fontColor,
+          color: _lightColors.textColor,
         ),
   ),
 );
 
 final darkTheme = ThemeData(
-  appBarTheme: const AppBarTheme(
+  appBarTheme: AppBarTheme(
     elevation: 0,
-    backgroundColor: Color(0xff232936),
+    backgroundColor: _darkColors.appBarColor,
   ),
   fontFamily: GoogleFonts.quicksand().fontFamily,
-  primaryColor: const Color(0xff8d63ee),
-  primaryColorLight: const Color(0xffcab3fc).withOpacity(0.5),
-  scaffoldBackgroundColor: const Color(0xff2b3140),
-  textTheme: const TextTheme(
+  primaryColor: _darkColors.primaryColor,
+  primaryColorLight: _darkColors.primaryColorLight,
+  scaffoldBackgroundColor: _darkColors.scaffoldBackgroundColor,
+  textTheme: TextTheme(
     bodyText2: TextStyle(
-      color: Colors.white,
+      color: _darkColors.textColor,
     ),
   ),
 );
 
-class AppColors {
-  AppColors._();
+const _lightColors = _AppColors(
+  primaryColor: Color(0xff00d2ff),
+  primaryColorLight: Color(0xffcfe7f0),
+  appBarColor: TagColors.blue,
+  scaffoldBackgroundColor: Colors.white,
+  textColor: Color(0xff172741),
+);
 
-  static const primaryBlue = Color(0xff00d2ff);
-  static const lightBlue = Color(0xffcfe7f0);
-  static const gray = Color(0xffdedede);
+const _darkColors = _AppColors(
+  primaryColor: Color(0xff8d63ee),
+  primaryColorLight: Color.fromRGBO(220, 179, 252, 0.6),
+  appBarColor: Color(0xff232936),
+  scaffoldBackgroundColor: Color(0xff2b3140),
+  textColor: Colors.white,
+);
 
-  static const fontColor = Color(0xff172741);
+class _AppColors {
+  final Color primaryColor;
+  final Color primaryColorLight;
+  final Color appBarColor;
+  final Color scaffoldBackgroundColor;
+  final Color textColor;
 
-  static const tagBlue = Color(0xff65c2f9);
-  static const tagYellow = Color(0xfff7b369);
-  static const tagPink = Color(0xfff9807c);
+  const _AppColors({
+    required this.primaryColor,
+    required this.primaryColorLight,
+    required this.appBarColor,
+    required this.scaffoldBackgroundColor,
+    required this.textColor,
+  });
+}
+
+class TagColors {
+  TagColors._();
+
+  static const blue = Color(0xff65c2f9);
+  static const yellow = Color(0xfff7b369);
+  static const pink = Color(0xfff9807c);
 }

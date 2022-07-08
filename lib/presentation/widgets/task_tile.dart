@@ -54,7 +54,7 @@ class _TaskTileState extends State<TaskTile> {
                 height: 36,
                 decoration: BoxDecoration(
                   color: widget.tag != null
-                      ? AppColors.tagPink
+                      ? TagColors.pink
                       : Theme.of(context).scaffoldBackgroundColor,
                   borderRadius: BorderRadius.circular(4),
                 ),
