@@ -18,6 +18,8 @@ dependencies:
   flutter_svg: 
   routemaster:
   flutter_riverpod:
+  google_fonts:
+  material_design_icons_flutter:
 
 dev_dependencies:
   flutter_test:
