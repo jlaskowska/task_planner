@@ -35,14 +35,14 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
   @override
   int get schemaVersion => 1;
 
-  @override
-  Future<void> completeTask(int id) async {
-    (update(tasks)..where((task) => task.id.equals(id))).write(
-      const TasksCompanion(
-        completed: Value(true),
-      ),
-    );
-  }
+  // @override
+  // Future<void> completeTask(int id) async {
+  //   (update(tasks)..where((task) => task.id.equals(id))).write(
+  //     const TasksCompanion(
+  //       completed: Value(true),
+  //     ),
+  //   );
+  // }
 
   @override
   Future<TaskEntity> createTask({
@@ -68,6 +68,19 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
   }
 
   @override
+  Future<void> updateTask({
+    required int id,
+    String? title,
+    bool? value,
+  }) =>
+      (update(tasks)..where((task) => task.id.equals(id))).write(
+        TasksCompanion(
+          title: title != null ? Value(title) : const Value.absent(),
+          completed: value != null ? Value(value) : const Value.absent(),
+        ),
+      );
+
+  @override
   Future<void> deleteTask(int id) =>
       (delete(tasks)..where((task) => task.id.equals(id))).go();
 
@@ -76,7 +89,9 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
       select(tasks).map((task) => TasksMapper.infToDom(task)).get();
 
   @override
-  Future<TaskEntity> getTask(int id) => _getTaskQuery(id).getSingle();
+  Future<TaskEntity> getTask(int id) {
+    return _getTaskQuery(id).getSingle();
+  }
 
   SingleSelectable<TaskEntity> _getTaskQuery(int id) =>
       (select(tasks)..where((task) => task.id.equals(id)))
