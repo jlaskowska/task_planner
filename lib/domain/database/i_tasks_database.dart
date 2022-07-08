@@ -1,10 +1,9 @@
-
 import 'package:task_planner/domain/database/task_entity.dart';
 
 abstract class ITasksDatabase {
   Future<TaskEntity> createTask({required String title, String? tag});
+  Future<void> updateTask({required int id, required String title});
   Future<void> deleteTask(int id);
-  Future<void> completeTask(int id);
   Future<TaskEntity> getTask(int id);
   Future<List<TaskEntity>> getAllTasks();
   Stream<List<TaskEntity>> watchAllTasks();
