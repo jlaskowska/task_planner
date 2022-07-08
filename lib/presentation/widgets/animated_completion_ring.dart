@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:task_planner/presentation/widgets/completion_ring.dart';
 
 class AnimatedCompletionRing extends StatefulWidget {
   final double size;
   final Color completedIconColor;
-  final Color uncompletedIconColor;
+  final Color? uncompletedIconColor;
   final bool completed;
-  final Color taskCompletedBackgroundColor;
-  final Color arcColor;
+  final Color? taskCompletedBackgroundColor;
+  final Color? arcColor;
   final void Function(bool) onAnimationCompleted;
 
   const AnimatedCompletionRing({
-    this.size = 200,
-    this.completedIconColor = Colors.black87,
+    this.size = 36,
+    this.completedIconColor = Colors.white,
     this.completed = false,
-    this.arcColor = Colors.black45,
-    this.taskCompletedBackgroundColor = Colors.white,
-    this.uncompletedIconColor = Colors.white,
+    this.arcColor,
+    this.taskCompletedBackgroundColor,
+    this.uncompletedIconColor,
     required this.onAnimationCompleted,
     Key? key,
   }) : super(key: key);
@@ -91,21 +91,20 @@ class _AnimatedCompletionRingState extends State<AnimatedCompletionRing>
             width: widget.size,
             height: widget.size,
             child: TaskCompletionRing(
-              taskNotCompletedColor: widget.arcColor,
-              taskCompletedColor: widget.taskCompletedBackgroundColor,
+              taskNotCompletedColor:
+                  widget.arcColor ?? Theme.of(context).primaryColorLight,
+              taskCompletedColor: widget.taskCompletedBackgroundColor ??
+                  Theme.of(context).primaryColor,
               child: Center(
-                child: AspectRatio(
-                  aspectRatio: 1.7,
-                  child: SvgPicture.asset(
-                    _shouldShowCheckIcon && hasCompleted
-                        ? 'assets/svgs/tick.svg'
-                        : 'assets/svgs/pen.svg',
-                    height: widget.size * 0.55,
-                    width: widget.size * 0.55,
-                    color: hasCompleted
-                        ? widget.completedIconColor
-                        : widget.uncompletedIconColor,
-                  ),
+                child: Icon(
+                  _shouldShowCheckIcon && hasCompleted
+                      ? MdiIcons.check
+                      : MdiIcons.close,
+                  size: widget.size * 0.5,
+                  color: hasCompleted
+                      ? widget.completedIconColor
+                      : widget.uncompletedIconColor ??
+                          Theme.of(context).textTheme.bodyText2?.color,
                 ),
               ),
               progress: progress,

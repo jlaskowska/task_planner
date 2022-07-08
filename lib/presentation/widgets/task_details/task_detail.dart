@@ -69,12 +69,20 @@ class _TaskDetailsContentState extends State<TaskDetailsContent> {
               child: TextField(
                 textCapitalization: TextCapitalization.sentences,
                 autofocus: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Task',
+                  hintStyle: Theme.of(context).textTheme.bodyText2?.copyWith(
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyText2
+                            ?.color
+                            ?.withOpacity(0.6),
+                      ),
                 ),
                 controller: _controller,
-                cursorColor: Colors.black,
+                style: Theme.of(context).textTheme.bodyText2,
+                cursorColor: Theme.of(context).textTheme.bodyText2?.color,
               ),
             )
           ],

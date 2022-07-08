@@ -35,6 +35,7 @@ class TasksOverviewContent extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
+        backgroundColor: Theme.of(context).primaryColor,
         onPressed: () async {
           final id = await viewModel.createTask();
           Routemaster.of(context).push('/task/$id');
@@ -49,6 +50,7 @@ class TasksOverviewContent extends StatelessWidget {
             TaskTile(
               title: task.title,
               isCompleted: task.isCompleted,
+              tag: task.tag?.label,
               onChanged: (value) {},
               onTap: () => Routemaster.of(context).push('/task/${task.id}'),
             ),

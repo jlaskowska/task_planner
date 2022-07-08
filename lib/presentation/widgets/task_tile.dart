@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:task_planner/presentation/design.dart';
 import 'package:task_planner/presentation/widgets/animated_completion_ring.dart';
 
 class TaskTile extends StatefulWidget {
   final String title;
-  final String? subtitle;
+  final String? tag;
   final bool isCompleted;
   final VoidCallback onTap;
   final void Function(bool) onChanged;
 
   const TaskTile({
     required this.title,
-    this.subtitle,
+    this.tag,
     required this.onTap,
     this.isCompleted = false,
     required this.onChanged,
@@ -44,48 +45,57 @@ class _TaskTileState extends State<TaskTile> {
       opacity: _isCompleted ? 0.5 : 1,
       child: GestureDetector(
         onTap: widget.onTap,
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          elevation: 8,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-                  child: Text(
-                    widget.title,
-                    softWrap: true,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Container(
+                width: 4,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: widget.tag != null
+                      ? TagColors.pink
+                      : Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 8,
+                      ),
+                      child: Text(
+                        widget.title,
+                        softWrap: true,
+                        style: Theme.of(context).textTheme.bodyText2,
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-                child: SizedBox(
-                  height: 60,
-                  width: 60,
-                  child: AnimatedCompletionRing(
-                    onAnimationCompleted: (value) async {
-                      if (value) {
-                        await Future.delayed(const Duration(milliseconds: 400));
-                      }
-                      widget.onChanged(value);
-                    },
-                    uncompletedIconColor: Colors.black,
-                    taskCompletedBackgroundColor: Colors.green,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8,
+                    ),
+                    child: AnimatedCompletionRing(
+                      onAnimationCompleted: (value) async {
+                        if (value) {
+                          await Future.delayed(
+                              const Duration(milliseconds: 400));
+                        }
+                        widget.onChanged(value);
+                      },
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
