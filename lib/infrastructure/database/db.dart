@@ -71,12 +71,13 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
   Future<void> updateTask({
     required int id,
     String? title,
-    bool? value,
+    bool? completed,
   }) =>
       (update(tasks)..where((task) => task.id.equals(id))).write(
         TasksCompanion(
           title: title != null ? Value(title) : const Value.absent(),
-          completed: value != null ? Value(value) : const Value.absent(),
+          completed:
+              completed != null ? Value(completed) : const Value.absent(),
         ),
       );
 
