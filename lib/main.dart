@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      theme: lightTheme,
       routerDelegate: RoutemasterDelegate(routesBuilder: (_) => routes),
       routeInformationParser: const RoutemasterParser(),
     );
