@@ -1,17 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-ThemeData lightTheme = ThemeData(
-    appBarTheme:
-        const AppBarTheme(elevation: 0, backgroundColor: AppColors.tagBlue),
-    fontFamily: GoogleFonts.quicksand().fontFamily,
-    primaryColor: AppColors.primaryBlue,
-    primaryColorLight: AppColors.lightBlue,
-    scaffoldBackgroundColor: Colors.white,
-    textTheme: const TextTheme().apply(
-      bodyColor: AppColors.fontColor,
-      displayColor: AppColors.fontColor,
-    ));
+final lightTheme = ThemeData(
+  appBarTheme: const AppBarTheme(
+    elevation: 0,
+    backgroundColor: AppColors.tagBlue,
+  ),
+  fontFamily: GoogleFonts.quicksand().fontFamily,
+  primaryColor: AppColors.primaryBlue,
+  primaryColorLight: AppColors.lightBlue,
+  scaffoldBackgroundColor: Colors.white,
+  textTheme: TextTheme(
+    bodyText2: const TextTheme().bodyText2?.copyWith(
+          color: AppColors.fontColor,
+        ),
+  ),
+);
+
+final darkTheme = ThemeData(
+  appBarTheme: const AppBarTheme(
+    elevation: 0,
+    backgroundColor: Color(0xff232936),
+  ),
+  fontFamily: GoogleFonts.quicksand().fontFamily,
+  primaryColor: const Color(0xff8d63ee),
+  primaryColorLight: const Color(0xffcab3fc).withOpacity(0.5),
+  scaffoldBackgroundColor: const Color(0xff2b3140),
+  textTheme: const TextTheme(
+    bodyText2: TextStyle(
+      color: Colors.white,
+    ),
+  ),
+);
 
 class AppColors {
   AppColors._();

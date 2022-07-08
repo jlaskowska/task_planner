@@ -73,10 +73,7 @@ class _TaskTileState extends State<TaskTile> {
                       child: Text(
                         widget.title,
                         softWrap: true,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
+                        style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ),
                   ),
