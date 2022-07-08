@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:task_planner/infrastructure/database/db.dart';
 import 'package:task_planner/infrastructure/database/open_db_connection.dart';
@@ -10,7 +9,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Database.initialize(openConnection());
 
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

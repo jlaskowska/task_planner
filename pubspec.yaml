@@ -16,7 +16,7 @@ dependencies:
   path:
   freezed:
   routemaster:
-  flutter_riverpod:
+  provider:
   google_fonts:
   material_design_icons_flutter:
 
