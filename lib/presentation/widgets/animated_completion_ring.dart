@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:task_planner/presentation/design.dart';
 import 'package:task_planner/presentation/widgets/completion_ring.dart';
 
 class AnimatedCompletionRing extends StatefulWidget {
@@ -12,12 +13,12 @@ class AnimatedCompletionRing extends StatefulWidget {
   final void Function(bool) onAnimationCompleted;
 
   const AnimatedCompletionRing({
-    this.size = 200,
-    this.completedIconColor = Colors.black87,
+    this.size = 36,
+    this.completedIconColor = Colors.white,
     this.completed = false,
-    this.arcColor = Colors.black45,
-    this.taskCompletedBackgroundColor = Colors.white,
-    this.uncompletedIconColor = Colors.white,
+    this.arcColor = AppColors.lightBlue,
+    this.taskCompletedBackgroundColor = AppColors.primaryBlue,
+    this.uncompletedIconColor = AppColors.fontColor,
     required this.onAnimationCompleted,
     Key? key,
   }) : super(key: key);
@@ -94,18 +95,14 @@ class _AnimatedCompletionRingState extends State<AnimatedCompletionRing>
               taskNotCompletedColor: widget.arcColor,
               taskCompletedColor: widget.taskCompletedBackgroundColor,
               child: Center(
-                child: AspectRatio(
-                  aspectRatio: 1.7,
-                  child: SvgPicture.asset(
-                    _shouldShowCheckIcon && hasCompleted
-                        ? 'assets/svgs/tick.svg'
-                        : 'assets/svgs/pen.svg',
-                    height: widget.size * 0.55,
-                    width: widget.size * 0.55,
-                    color: hasCompleted
-                        ? widget.completedIconColor
-                        : widget.uncompletedIconColor,
-                  ),
+                child: Icon(
+                  _shouldShowCheckIcon && hasCompleted
+                      ? MdiIcons.check
+                      : MdiIcons.close,
+                  size: widget.size * 0.5,
+                  color: hasCompleted
+                      ? widget.completedIconColor
+                      : widget.uncompletedIconColor,
                 ),
               ),
               progress: progress,
