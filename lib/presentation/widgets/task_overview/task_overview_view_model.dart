@@ -42,8 +42,10 @@ class TaskOverviewViewModel extends ChangeNotifier {
     return newTask.id;
   }
 
-  Future<void> toggleCompleteTask(
-          {required int taskId, required bool value, String? tag}) async =>
+  Future<void> toggleCompleteTask({
+    required int taskId,
+    required bool value,
+  }) async =>
       _completeTaskUseCase.call(
         id: taskId,
         completed: value,
