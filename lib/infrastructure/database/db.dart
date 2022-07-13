@@ -35,15 +35,6 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
   @override
   int get schemaVersion => 1;
 
-  // @override
-  // Future<void> completeTask(int id) async {
-  //   (update(tasks)..where((task) => task.id.equals(id))).write(
-  //     const TasksCompanion(
-  //       completed: Value(true),
-  //     ),
-  //   );
-  // }
-
   @override
   Future<TaskEntity> createTask({
     required String title,
@@ -90,9 +81,7 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
       select(tasks).map((task) => TasksMapper.infToDom(task)).get();
 
   @override
-  Future<TaskEntity> getTask(int id) {
-    return _getTaskQuery(id).getSingle();
-  }
+  Future<TaskEntity> getTask(int id) => _getTaskQuery(id).getSingle();
 
   SingleSelectable<TaskEntity> _getTaskQuery(int id) =>
       (select(tasks)..where((task) => task.id.equals(id)))

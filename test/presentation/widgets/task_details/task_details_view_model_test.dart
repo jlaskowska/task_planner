@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:task_planner/presentation/widgets/task_details/task_details_view_model.dart';
 
-import '../../mocks.dart';
-import '../../test_utils.dart';
+import '../../../mocks.dart';
+import '../../../test_utils.dart';
 
 void main() {
   group('$TaskDetailsViewModel', () {
@@ -38,6 +38,7 @@ void main() {
           verify(() => getTaskByIdUseCase.call(id));
         });
       });
+
       group('when taskId is null', () {
         test('expect isInitizlied = false & taskTitle = null', () async {
           const id = 1;
@@ -69,6 +70,7 @@ void main() {
         verify(() => deleteTaskUseCase.call(id: id));
       });
     });
+
     group('updateTaskTitle', () {
       test('expect task title to be updated', () async {
         const title = 'title';

@@ -3,8 +3,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:task_planner/domain/database/use_cases/complete_task_use_case.dart';
 import 'package:task_planner/presentation/widgets/task_overview/task_overview_view_model.dart';
 
-import '../../mocks.dart';
-import '../../test_utils.dart';
+import '../../../mocks.dart';
+import '../../../test_utils.dart';
 
 void main() {
   group('$TaskOverviewViewModel', () {
@@ -54,15 +54,16 @@ void main() {
 
     group('createTask', () {
       test('expect task id', () async {
+        const id = 1;
         const title = '';
 
-        final taskEnity = testTaskEntity(title: title);
+        final taskEnity = testTaskEntity(id: id, title: title);
         when(() => mockCreateTaskUseCase.call(title: title))
             .thenAnswer((_) => Future.value(taskEnity));
 
         final taskId = await viewModel.createTask();
 
-        expect(taskId, 1);
+        expect(taskId, id);
 
         verify(() => mockCreateTaskUseCase.call(title: title));
       });
