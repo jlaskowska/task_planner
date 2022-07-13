@@ -1,27 +1,26 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:task_planner/domain/database/use_cases/create_task_use_case.dart';
-import 'package:task_planner/domain/database/use_cases/watch_all_tasks_use_case.dart';
+import 'package:task_planner/domain/database/use_cases/complete_task_use_case.dart';
 import 'package:task_planner/presentation/widgets/task_overview/task_overview_view_model.dart';
 
-import '../../test_utils.dart';
-
-class _MockCreateTaskUseCase extends Mock implements CreateTaskUseCase {}
-
-class _MockWatchAllTasksUseCase extends Mock implements WatchAllTasksUseCase {}
+import '../../../mocks.dart';
+import '../../../test_utils.dart';
 
 void main() {
   group('$TaskOverviewViewModel', () {
-    late _MockCreateTaskUseCase mockCreateTaskUseCase;
-    late _MockWatchAllTasksUseCase mockWatchAllTasksUseCase;
+    late MockCreateTaskUseCase mockCreateTaskUseCase;
+    late MockWatchAllTasksUseCase mockWatchAllTasksUseCase;
+    late CompleteTaskUseCase mockCompleteTaskUseCase;
     late TaskOverviewViewModel viewModel;
 
     setUp(() {
-      mockCreateTaskUseCase = _MockCreateTaskUseCase();
-      mockWatchAllTasksUseCase = _MockWatchAllTasksUseCase();
+      mockCreateTaskUseCase = MockCreateTaskUseCase();
+      mockWatchAllTasksUseCase = MockWatchAllTasksUseCase();
+      mockCompleteTaskUseCase = MockCompleteTaskUseCase();
       viewModel = TaskOverviewViewModel(
         createTaskUseCase: mockCreateTaskUseCase,
         watchAllTasksUseCase: mockWatchAllTasksUseCase,
+        completeTaskUseCase: mockCompleteTaskUseCase,
       );
     });
 
@@ -55,17 +54,33 @@ void main() {
 
     group('createTask', () {
       test('expect task id', () async {
+        const id = 1;
         const title = '';
 
-        final taskEnity = testTaskEntity(title: title);
+        final taskEnity = testTaskEntity(id: id, title: title);
         when(() => mockCreateTaskUseCase.call(title: title))
             .thenAnswer((_) => Future.value(taskEnity));
 
         final taskId = await viewModel.createTask();
 
-        expect(taskId, 1);
+        expect(taskId, id);
 
         verify(() => mockCreateTaskUseCase.call(title: title));
+      });
+    });
+
+    group('toggleCompleteTask', () {
+      test('expect uncompleted task is completed', () async {
+        const int id = 1;
+        const bool completed = true;
+
+        when(() => mockCompleteTaskUseCase.call(id: id, completed: completed))
+            .thenAnswer((_) async => () {});
+
+        await viewModel.toggleCompleteTask(taskId: id, value: completed);
+
+        verify(
+            () => mockCompleteTaskUseCase.call(id: id, completed: completed));
       });
     });
   });

@@ -97,6 +97,72 @@ void main() {
       });
     });
 
+    group('updateTask', () {
+      group('with isCompleted', () {
+        test('expect a completed task', () async {
+          const taskEntity =
+              TaskEntity(id: id, title: title, isCompleted: false);
+
+          final task = Task(id: id, title: title, completed: false);
+
+          await db.into(db.tasks).insert(task);
+
+          final taskFromDatabase = await db.getTask(id);
+
+          expect(taskFromDatabase, taskEntity);
+
+          await db.updateTask(id: id, completed: true);
+
+          final updatedTask = await db.getTask(id);
+
+          expect(updatedTask, taskEntity.copyWith(isCompleted: true));
+        });
+      });
+      group('with title', () {
+        test('expect a task with an updated title', () async {
+          const newTitle = 'newTitle';
+          const taskEntity =
+              TaskEntity(id: id, title: title, isCompleted: false);
+
+          final task = Task(id: id, title: title, completed: false);
+
+          await db.into(db.tasks).insert(task);
+
+          final taskFromDatabase = await db.getTask(id);
+
+          expect(taskFromDatabase, taskEntity);
+
+          await db.updateTask(id: id, title: newTitle);
+
+          final updatedTask = await db.getTask(id);
+
+          expect(updatedTask, taskEntity.copyWith(title: newTitle));
+        });
+      });
+      group('with title and isCompleted', () {
+        test('expect an updated task', () async {
+          const newTitle = 'newTitle';
+          const taskEntity =
+              TaskEntity(id: id, title: title, isCompleted: false);
+
+          final task = Task(id: id, title: title, completed: false);
+
+          await db.into(db.tasks).insert(task);
+
+          final taskFromDatabase = await db.getTask(id);
+
+          expect(taskFromDatabase, taskEntity);
+
+          await db.updateTask(id: id, title: newTitle, completed: true);
+
+          final updatedTask = await db.getTask(id);
+
+          expect(updatedTask,
+              taskEntity.copyWith(title: newTitle, isCompleted: true));
+        });
+      });
+    });
+
     group('getTask', () {
       group('when task exists in db', () {
         test('expect task is returned', () async {

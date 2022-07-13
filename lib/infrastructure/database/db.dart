@@ -36,15 +36,6 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
   int get schemaVersion => 1;
 
   @override
-  Future<void> completeTask(int id) async {
-    (update(tasks)..where((task) => task.id.equals(id))).write(
-      const TasksCompanion(
-        completed: Value(true),
-      ),
-    );
-  }
-
-  @override
   Future<TaskEntity> createTask({
     required String title,
     String? tag,
@@ -66,6 +57,20 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
 
     return getTask(id);
   }
+
+  @override
+  Future<void> updateTask({
+    required int id,
+    String? title,
+    bool? completed,
+  }) =>
+      (update(tasks)..where((task) => task.id.equals(id))).write(
+        TasksCompanion(
+          title: title != null ? Value(title) : const Value.absent(),
+          completed:
+              completed != null ? Value(completed) : const Value.absent(),
+        ),
+      );
 
   @override
   Future<void> deleteTask(int id) =>
