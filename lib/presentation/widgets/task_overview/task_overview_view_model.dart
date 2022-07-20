@@ -20,11 +20,17 @@ class TaskOverviewViewModel extends ChangeNotifier {
   final CompleteTaskUseCase _completeTaskUseCase;
   StreamSubscription<List<TaskEntity>>? _watchAllTasksSubscription;
   var _allTasks = <TaskEntity>[];
+  var _isInitialized = false;
+
+  bool get isInitialized => _isInitialized;
 
   void initialize() {
     _watchAllTasksSubscription?.cancel();
     _watchAllTasksSubscription = _watchAllTasksUseCase().listen((event) {
       _allTasks = event.where((task) => task.title.isNotEmpty).toList();
+      _allTasks.sort(
+          ((a, b) => (a.isCompleted ? 1 : 0).compareTo(b.isCompleted ? 1 : 0)));
+      _isInitialized = true;
       notifyListeners();
     });
   }

@@ -14,9 +14,13 @@ class TasksOverview extends StatelessWidget {
         builder: (context, child) {
           final viewModel = Provider.of<TaskOverviewViewModel>(context);
 
-          return TasksOverviewContent(
-            viewModel: viewModel,
-          );
+          if (viewModel.isInitialized) {
+            return TasksOverviewContent(
+              viewModel: viewModel,
+            );
+          }
+
+          return const SizedBox.shrink();
         });
   }
 }
