@@ -49,17 +49,26 @@ class TasksOverviewContent extends StatelessWidget {
         title: const Text('Task Planner'),
       ),
       body: AnimatedTaskList(
-        viewModel: viewModel,
+        tasks: viewModel.allTasks,
+        onToggleTaskCompletion: viewModel.toggleCompleteTask,
+        onTaskTapped: (id) => Routemaster.of(context).push('/task/$id'),
       ),
     );
   }
 }
 
 class AnimatedTaskList extends StatefulWidget {
-  final TaskOverviewViewModel viewModel;
+  final List<TaskEntity> tasks;
+  final Future<void> Function({
+    required int taskId,
+    required bool value,
+  }) onToggleTaskCompletion;
+  final void Function(int id) onTaskTapped;
 
   const AnimatedTaskList({
-    required this.viewModel,
+    required this.tasks,
+    required this.onToggleTaskCompletion,
+    required this.onTaskTapped,
     Key? key,
   }) : super(key: key);
 
@@ -122,9 +131,9 @@ class _AnimatedTaskListState extends State<AnimatedTaskList> {
   }
 
   void _addItems() async {
-    for (var i = 0; i < widget.viewModel.allTasks.length; i++) {
+    for (var i = 0; i < widget.tasks.length; i++) {
       await Future.delayed(const Duration(milliseconds: 100), () {
-        _tasks.add(widget.viewModel.allTasks[i]);
+        _tasks.add(widget.tasks[i]);
         _key.currentState?.insertItem(_tasks.length - 1);
       });
     }
@@ -134,7 +143,7 @@ class _AnimatedTaskListState extends State<AnimatedTaskList> {
   void didUpdateWidget(AnimatedTaskList oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    for (final task in widget.viewModel.allTasks) {
+    for (final task in widget.tasks) {
       final localTasks = _tasks.where(
         (element) => element.id == task.id,
       );
@@ -175,11 +184,10 @@ class _AnimatedTaskListState extends State<AnimatedTaskList> {
             isCompleted: task.isCompleted,
             tag: task.tag?.label,
             onChanged: (value) {
-              widget.viewModel
-                  .toggleCompleteTask(taskId: task.id, value: value);
+              widget.onToggleTaskCompletion(taskId: task.id, value: value);
               _removeItem(index, value);
             },
-            onTap: () => Routemaster.of(context).push('/task/${task.id}'),
+            onTap: () => widget.onTaskTapped(task.id),
           ),
         );
       }),
