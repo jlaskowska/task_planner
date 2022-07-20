@@ -40,6 +40,9 @@ class _AnimatedCompletionRingState extends State<AnimatedCompletionRing>
       duration: const Duration(milliseconds: 750),
     );
 
+    if (widget.completed) {
+      _shouldShowCheckIcon = true;
+    }
     _controller.addStatusListener(_checkStatusListner);
     _animation = _controller.drive(CurveTween(curve: Curves.easeInOut));
   }
@@ -61,7 +64,7 @@ class _AnimatedCompletionRingState extends State<AnimatedCompletionRing>
   }
 
   void _onTapDown(TapDownDetails details) {
-    if (_controller.status != AnimationStatus.completed) {
+    if (!widget.completed && _controller.status != AnimationStatus.completed) {
       _controller.forward();
     } else {
       widget.onAnimationCompleted(false);
