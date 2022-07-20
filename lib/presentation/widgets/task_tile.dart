@@ -83,6 +83,7 @@ class _TaskTileState extends State<TaskTile> {
                       vertical: 8,
                     ),
                     child: AnimatedCompletionRing(
+                      completed: widget.isCompleted,
                       onAnimationCompleted: (value) async {
                         if (value) {
                           await Future.delayed(
