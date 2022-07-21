@@ -79,6 +79,15 @@ class _AnimatedCompletionRingState extends State<AnimatedCompletionRing>
   }
 
   @override
+  void didUpdateWidget(covariant AnimatedCompletionRing oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.completed != _shouldShowCheckIcon) {
+      _shouldShowCheckIcon = widget.completed;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTapDown: _onTapDown,

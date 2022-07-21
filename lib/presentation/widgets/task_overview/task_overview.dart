@@ -180,6 +180,7 @@ class _AnimatedTaskListState extends State<AnimatedTaskList> {
             curve: Curves.easeOut,
           )),
           child: TaskTile(
+            key: Key('taskTile: ${task.id}'),
             title: task.title,
             isCompleted: task.isCompleted,
             tag: task.tag?.label,
