@@ -19,6 +19,7 @@ dependencies:
   provider:
   google_fonts:
   material_design_icons_flutter:
+  clock:
 
 dev_dependencies:
   flutter_test:
