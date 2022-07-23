@@ -2,34 +2,33 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:task_planner/domain/database/task_entity.dart';
-import 'package:task_planner/domain/database/tasks_sorter.dart';
 import 'package:task_planner/domain/database/use_cases/complete_task_use_case.dart';
 import 'package:task_planner/domain/database/use_cases/create_task_use_case.dart';
-import 'package:task_planner/domain/database/use_cases/watch_all_tasks_use_case.dart';
+import 'package:task_planner/domain/database/use_cases/watch_all_sorted_tasks_use_case.dart';
 
 class TaskOverviewViewModel extends ChangeNotifier {
   TaskOverviewViewModel({
     CreateTaskUseCase? createTaskUseCase,
-    WatchAllTasksUseCase? watchAllTasksUseCase,
+    WatchAllSortedTasksUseCase? watchAllTasksUseCase,
     CompleteTaskUseCase? completeTaskUseCase,
   })  : _createTaskUseCase = createTaskUseCase ?? CreateTaskUseCase(),
-        _watchAllTasksUseCase = watchAllTasksUseCase ?? WatchAllTasksUseCase(),
+        _watchAllTasksUseCase =
+            watchAllTasksUseCase ?? WatchAllSortedTasksUseCase(),
         _completeTaskUseCase = completeTaskUseCase ?? CompleteTaskUseCase();
 
   final CreateTaskUseCase _createTaskUseCase;
-  final WatchAllTasksUseCase _watchAllTasksUseCase;
+  final WatchAllSortedTasksUseCase _watchAllTasksUseCase;
   final CompleteTaskUseCase _completeTaskUseCase;
-  StreamSubscription<List<TaskEntity>>? _watchAllTasksSubscription;
-  var _allTasks = <TaskEntity>[];
+  StreamSubscription<List<TaskEntity>>? _watchAllSortedTasksSubscription;
+  var _allSortedTasks = <TaskEntity>[];
   var _isInitialized = false;
 
   bool get isInitialized => _isInitialized;
 
   void initialize() {
-    _watchAllTasksSubscription?.cancel();
-    _watchAllTasksSubscription = _watchAllTasksUseCase().listen((event) {
-      _allTasks = event.where((task) => task.title.isNotEmpty).toList();
-      _allTasks = TasksSorter.sort(_allTasks);
+    _watchAllSortedTasksSubscription?.cancel();
+    _watchAllSortedTasksSubscription = _watchAllTasksUseCase().listen((event) {
+      _allSortedTasks = event.where((task) => task.title.isNotEmpty).toList();
       _isInitialized = true;
       notifyListeners();
     });
@@ -37,11 +36,11 @@ class TaskOverviewViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    _watchAllTasksSubscription?.cancel();
+    _watchAllSortedTasksSubscription?.cancel();
     super.dispose();
   }
 
-  List<TaskEntity> get allTasks => _allTasks;
+  List<TaskEntity> get allSortedTasks => _allSortedTasks;
 
   Future<int> createTask() async {
     final newTask = await _createTaskUseCase.call(title: '');

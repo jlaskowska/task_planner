@@ -49,7 +49,7 @@ class TasksOverviewContent extends StatelessWidget {
         title: const Text('Task Planner'),
       ),
       body: AnimatedTaskList(
-        tasks: viewModel.allTasks,
+        tasks: viewModel.allSortedTasks,
         onToggleTaskCompletion: viewModel.toggleCompleteTask,
         onTaskTapped: (id) => Routemaster.of(context).push('/task/$id'),
       ),
