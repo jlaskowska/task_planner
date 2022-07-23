@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:task_planner/domain/database/tag_entity.dart';
@@ -22,7 +23,7 @@ void main() {
     group('createTask', () {
       group('when no label is given', () {
         test('expect task is inserted into db', () async {
-          final task = Task(id: id, title: title, completed: false);
+          final task = Task(id: id, title: title);
 
           await db.createTask(title: title);
           final expectation = expectLater(
@@ -42,7 +43,6 @@ void main() {
           id: id,
           title: title,
           tag: tag,
-          completed: false,
         );
         final tagDTO = Tag(label: tag);
 
@@ -98,12 +98,12 @@ void main() {
     });
 
     group('updateTask', () {
-      group('with isCompleted', () {
-        test('expect a completed task', () async {
-          const taskEntity =
-              TaskEntity(id: id, title: title, isCompleted: false);
+      group('with completed', () {
+        final now = DateTime(1).toUtc();
 
-          final task = Task(id: id, title: title, completed: false);
+        test('when completed=true, expect a completed task', () async {
+          const taskEntity = TaskEntity(id: id, title: title);
+          final task = Task(id: id, title: title);
 
           await db.into(db.tasks).insert(task);
 
@@ -111,20 +111,40 @@ void main() {
 
           expect(taskFromDatabase, taskEntity);
 
-          await db.updateTask(id: id, completed: true);
+          withClock(Clock.fixed(now), () async {
+            await db.updateTask(id: id, completed: true);
+          });
 
           final updatedTask = await db.getTask(id);
 
-          expect(updatedTask, taskEntity.copyWith(isCompleted: true));
+          expect(updatedTask, taskEntity.copyWith(completedAt: now));
+        });
+
+        test('when completed=false, expect an uncompleted task', () async {
+          const taskEntity = TaskEntity(id: id, title: title);
+          final task = Task(id: id, title: title);
+
+          await db.into(db.tasks).insert(task);
+
+          final taskFromDatabase = await db.getTask(id);
+
+          expect(taskFromDatabase, taskEntity);
+
+          withClock(Clock.fixed(now), () async {
+            await db.updateTask(id: id, completed: false);
+          });
+
+          final updatedTask = await db.getTask(id);
+
+          expect(updatedTask, taskEntity.copyWith(uncompletedAt: now));
         });
       });
+
       group('with title', () {
         test('expect a task with an updated title', () async {
           const newTitle = 'newTitle';
-          const taskEntity =
-              TaskEntity(id: id, title: title, isCompleted: false);
-
-          final task = Task(id: id, title: title, completed: false);
+          const taskEntity = TaskEntity(id: id, title: title);
+          final task = Task(id: id, title: title);
 
           await db.into(db.tasks).insert(task);
 
@@ -139,36 +159,13 @@ void main() {
           expect(updatedTask, taskEntity.copyWith(title: newTitle));
         });
       });
-      group('with title and isCompleted', () {
-        test('expect an updated task', () async {
-          const newTitle = 'newTitle';
-          const taskEntity =
-              TaskEntity(id: id, title: title, isCompleted: false);
-
-          final task = Task(id: id, title: title, completed: false);
-
-          await db.into(db.tasks).insert(task);
-
-          final taskFromDatabase = await db.getTask(id);
-
-          expect(taskFromDatabase, taskEntity);
-
-          await db.updateTask(id: id, title: newTitle, completed: true);
-
-          final updatedTask = await db.getTask(id);
-
-          expect(updatedTask,
-              taskEntity.copyWith(title: newTitle, isCompleted: true));
-        });
-      });
     });
 
     group('getTask', () {
       group('when task exists in db', () {
         test('expect task is returned', () async {
-          const taskEntity =
-              TaskEntity(id: id, title: title, isCompleted: false);
-          final task = Task(id: id, title: title, completed: false);
+          const taskEntity = TaskEntity(id: id, title: title);
+          final task = Task(id: id, title: title);
 
           await db.into(db.tasks).insert(task);
 
@@ -187,7 +184,7 @@ void main() {
 
     group('deleteTask', () {
       test('expect task is deleted from db', () async {
-        final task = Task(id: id, title: title, completed: false);
+        final task = Task(id: id, title: title);
 
         await db.createTask(title: title);
 
@@ -207,8 +204,7 @@ void main() {
     group('getAllTasks', () {
       group('when tasks exist in db', () {
         test('expect all tasks are returned', () async {
-          const taskEntity =
-              TaskEntity(id: id, title: title, isCompleted: false);
+          const taskEntity = TaskEntity(id: id, title: title);
 
           await db.createTask(title: title);
           final allTasks = await db.getAllTasks();
@@ -227,8 +223,8 @@ void main() {
 
     group('watchAllTasks', () {
       test('expect stream is updated', () async {
-        const task1 = TaskEntity(id: 1, title: title, isCompleted: false);
-        const task2 = TaskEntity(id: 2, title: title, isCompleted: false);
+        const task1 = TaskEntity(id: 1, title: title);
+        const task2 = TaskEntity(id: 2, title: title);
 
         await db.createTask(title: title);
 
@@ -247,6 +243,7 @@ void main() {
         await expectation;
       });
     });
+
     group('addTag', () {
       test('expect tag is added to db', () async {
         final tag = Tag(label: 'label');
@@ -262,6 +259,7 @@ void main() {
         await expectation;
       });
     });
+
     group('getAllTags', () {
       group('when tags exist in db', () {
         test('expect all tags are returned', () async {
@@ -290,12 +288,10 @@ void main() {
             id: id,
             title: title,
             tag: TagEntity(label: tag),
-            isCompleted: false,
           );
           const taskWithoutTag = TaskEntity(
             id: id,
             title: title,
-            isCompleted: false,
           );
           final tagDTO = Tag(label: tag);
 

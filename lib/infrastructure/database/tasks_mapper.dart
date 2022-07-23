@@ -8,7 +8,6 @@ class TasksMapper {
   static TaskEntity infToDom(Task task) => TaskEntity(
         id: task.id,
         title: task.title,
-        isCompleted: task.completed,
         completedAt: task.completedAt,
         uncompletedAt: task.uncompletedAt,
         tag: task.tag != null ? TagEntity(label: task.tag!) : null,
@@ -17,7 +16,6 @@ class TasksMapper {
   static Task domToInf(TaskEntity entity) => Task(
         id: entity.id,
         title: entity.title,
-        completed: entity.isCompleted,
         completedAt: entity.completedAt,
         uncompletedAt: entity.uncompletedAt,
         tag: entity.tag?.label,

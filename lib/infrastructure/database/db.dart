@@ -52,9 +52,7 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
     }
     final taskCompanion = TasksCompanion(
       title: Value(title),
-      tag: Value(tag),
-      completed: const Value(false),
-      completedAt: const Value(null), //??
+      tag: tag != null ? Value(tag) : const Value.absent(),
     );
     final id = await into(tasks).insert(taskCompanion);
 
@@ -71,7 +69,6 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
       return (update(tasks)..where((task) => task.id.equals(id))).write(
         TasksCompanion(
           title: title != null ? Value(title) : const Value.absent(),
-          completed: Value(completed!),
           completedAt: Value(clock.now().toUtc()),
           uncompletedAt: const Value(null),
         ),
@@ -80,7 +77,6 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
       return (update(tasks)..where((task) => task.id.equals(id))).write(
         TasksCompanion(
           title: title != null ? Value(title) : const Value.absent(),
-          completed: Value(completed!),
           completedAt: const Value(null),
           uncompletedAt: Value(clock.now().toUtc()),
         ),
@@ -89,7 +85,6 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
       return (update(tasks)..where((task) => task.id.equals(id))).write(
         TasksCompanion(
           title: title != null ? Value(title) : const Value.absent(),
-          completed: const Value.absent(),
           completedAt: const Value.absent(),
           uncompletedAt: const Value.absent(),
         ),

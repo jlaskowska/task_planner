@@ -20,14 +20,12 @@ class _$TaskEntityTearOff {
   _TaskEntity call(
       {required int id,
       required String title,
-      required bool isCompleted,
       DateTime? completedAt,
       DateTime? uncompletedAt,
       TagEntity? tag}) {
     return _TaskEntity(
       id: id,
       title: title,
-      isCompleted: isCompleted,
       completedAt: completedAt,
       uncompletedAt: uncompletedAt,
       tag: tag,
@@ -42,7 +40,6 @@ const $TaskEntity = _$TaskEntityTearOff();
 mixin _$TaskEntity {
   int get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
-  bool get isCompleted => throw _privateConstructorUsedError;
   DateTime? get completedAt => throw _privateConstructorUsedError;
   DateTime? get uncompletedAt => throw _privateConstructorUsedError;
   TagEntity? get tag => throw _privateConstructorUsedError;
@@ -60,7 +57,6 @@ abstract class $TaskEntityCopyWith<$Res> {
   $Res call(
       {int id,
       String title,
-      bool isCompleted,
       DateTime? completedAt,
       DateTime? uncompletedAt,
       TagEntity? tag});
@@ -80,7 +76,6 @@ class _$TaskEntityCopyWithImpl<$Res> implements $TaskEntityCopyWith<$Res> {
   $Res call({
     Object? id = freezed,
     Object? title = freezed,
-    Object? isCompleted = freezed,
     Object? completedAt = freezed,
     Object? uncompletedAt = freezed,
     Object? tag = freezed,
@@ -94,10 +89,6 @@ class _$TaskEntityCopyWithImpl<$Res> implements $TaskEntityCopyWith<$Res> {
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
-      isCompleted: isCompleted == freezed
-          ? _value.isCompleted
-          : isCompleted // ignore: cast_nullable_to_non_nullable
-              as bool,
       completedAt: completedAt == freezed
           ? _value.completedAt
           : completedAt // ignore: cast_nullable_to_non_nullable
@@ -134,7 +125,6 @@ abstract class _$TaskEntityCopyWith<$Res> implements $TaskEntityCopyWith<$Res> {
   $Res call(
       {int id,
       String title,
-      bool isCompleted,
       DateTime? completedAt,
       DateTime? uncompletedAt,
       TagEntity? tag});
@@ -157,7 +147,6 @@ class __$TaskEntityCopyWithImpl<$Res> extends _$TaskEntityCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? title = freezed,
-    Object? isCompleted = freezed,
     Object? completedAt = freezed,
     Object? uncompletedAt = freezed,
     Object? tag = freezed,
@@ -171,10 +160,6 @@ class __$TaskEntityCopyWithImpl<$Res> extends _$TaskEntityCopyWithImpl<$Res>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
-      isCompleted: isCompleted == freezed
-          ? _value.isCompleted
-          : isCompleted // ignore: cast_nullable_to_non_nullable
-              as bool,
       completedAt: completedAt == freezed
           ? _value.completedAt
           : completedAt // ignore: cast_nullable_to_non_nullable
@@ -197,19 +182,15 @@ class _$_TaskEntity extends _TaskEntity {
   const _$_TaskEntity(
       {required this.id,
       required this.title,
-      required this.isCompleted,
       this.completedAt,
       this.uncompletedAt,
       this.tag})
-      : assert(isCompleted ? completedAt != null : completedAt == null),
-        super._();
+      : super._();
 
   @override
   final int id;
   @override
   final String title;
-  @override
-  final bool isCompleted;
   @override
   final DateTime? completedAt;
   @override
@@ -219,7 +200,7 @@ class _$_TaskEntity extends _TaskEntity {
 
   @override
   String toString() {
-    return 'TaskEntity(id: $id, title: $title, isCompleted: $isCompleted, completedAt: $completedAt, uncompletedAt: $uncompletedAt, tag: $tag)';
+    return 'TaskEntity(id: $id, title: $title, completedAt: $completedAt, uncompletedAt: $uncompletedAt, tag: $tag)';
   }
 
   @override
@@ -229,8 +210,6 @@ class _$_TaskEntity extends _TaskEntity {
             other is _TaskEntity &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.title, title) &&
-            const DeepCollectionEquality()
-                .equals(other.isCompleted, isCompleted) &&
             const DeepCollectionEquality()
                 .equals(other.completedAt, completedAt) &&
             const DeepCollectionEquality()
@@ -243,7 +222,6 @@ class _$_TaskEntity extends _TaskEntity {
       runtimeType,
       const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(title),
-      const DeepCollectionEquality().hash(isCompleted),
       const DeepCollectionEquality().hash(completedAt),
       const DeepCollectionEquality().hash(uncompletedAt),
       const DeepCollectionEquality().hash(tag));
@@ -258,7 +236,6 @@ abstract class _TaskEntity extends TaskEntity {
   const factory _TaskEntity(
       {required int id,
       required String title,
-      required bool isCompleted,
       DateTime? completedAt,
       DateTime? uncompletedAt,
       TagEntity? tag}) = _$_TaskEntity;
@@ -268,8 +245,6 @@ abstract class _TaskEntity extends TaskEntity {
   int get id;
   @override
   String get title;
-  @override
-  bool get isCompleted;
   @override
   DateTime? get completedAt;
   @override

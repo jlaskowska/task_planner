@@ -6,7 +6,6 @@ class Tasks extends Table {
   TextColumn get tag =>
       text().nullable().customConstraint('NULL REFERENCES tags(label)')();
   TextColumn get title => text()();
-  BoolColumn get completed => boolean().withDefault(const Constant(false))();
   TextColumn get completedAt =>
       text().nullable().map(const IsoDateTimeConverter())();
   TextColumn get uncompletedAt =>
