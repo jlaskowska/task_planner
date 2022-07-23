@@ -12,11 +12,15 @@ class Task extends DataClass implements Insertable<Task> {
   final String? tag;
   final String title;
   final bool completed;
+  final DateTime? completedAt;
+  final DateTime? uncompletedAt;
   Task(
       {required this.id,
       this.tag,
       required this.title,
-      required this.completed});
+      required this.completed,
+      this.completedAt,
+      this.uncompletedAt});
   factory Task.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return Task(
@@ -28,6 +32,10 @@ class Task extends DataClass implements Insertable<Task> {
           .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
       completed: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}completed'])!,
+      completedAt: $TasksTable.$converter0.mapToDart(const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}completed_at'])),
+      uncompletedAt: $TasksTable.$converter1.mapToDart(const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}uncompleted_at'])),
     );
   }
   @override
@@ -39,6 +47,15 @@ class Task extends DataClass implements Insertable<Task> {
     }
     map['title'] = Variable<String>(title);
     map['completed'] = Variable<bool>(completed);
+    if (!nullToAbsent || completedAt != null) {
+      final converter = $TasksTable.$converter0;
+      map['completed_at'] = Variable<String?>(converter.mapToSql(completedAt));
+    }
+    if (!nullToAbsent || uncompletedAt != null) {
+      final converter = $TasksTable.$converter1;
+      map['uncompleted_at'] =
+          Variable<String?>(converter.mapToSql(uncompletedAt));
+    }
     return map;
   }
 
@@ -48,6 +65,12 @@ class Task extends DataClass implements Insertable<Task> {
       tag: tag == null && nullToAbsent ? const Value.absent() : Value(tag),
       title: Value(title),
       completed: Value(completed),
+      completedAt: completedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(completedAt),
+      uncompletedAt: uncompletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(uncompletedAt),
     );
   }
 
@@ -59,6 +82,8 @@ class Task extends DataClass implements Insertable<Task> {
       tag: serializer.fromJson<String?>(json['tag']),
       title: serializer.fromJson<String>(json['title']),
       completed: serializer.fromJson<bool>(json['completed']),
+      completedAt: serializer.fromJson<DateTime?>(json['completedAt']),
+      uncompletedAt: serializer.fromJson<DateTime?>(json['uncompletedAt']),
     );
   }
   @override
@@ -69,14 +94,25 @@ class Task extends DataClass implements Insertable<Task> {
       'tag': serializer.toJson<String?>(tag),
       'title': serializer.toJson<String>(title),
       'completed': serializer.toJson<bool>(completed),
+      'completedAt': serializer.toJson<DateTime?>(completedAt),
+      'uncompletedAt': serializer.toJson<DateTime?>(uncompletedAt),
     };
   }
 
-  Task copyWith({int? id, String? tag, String? title, bool? completed}) => Task(
+  Task copyWith(
+          {int? id,
+          String? tag,
+          String? title,
+          bool? completed,
+          DateTime? completedAt,
+          DateTime? uncompletedAt}) =>
+      Task(
         id: id ?? this.id,
         tag: tag ?? this.tag,
         title: title ?? this.title,
         completed: completed ?? this.completed,
+        completedAt: completedAt ?? this.completedAt,
+        uncompletedAt: uncompletedAt ?? this.uncompletedAt,
       );
   @override
   String toString() {
@@ -84,13 +120,16 @@ class Task extends DataClass implements Insertable<Task> {
           ..write('id: $id, ')
           ..write('tag: $tag, ')
           ..write('title: $title, ')
-          ..write('completed: $completed')
+          ..write('completed: $completed, ')
+          ..write('completedAt: $completedAt, ')
+          ..write('uncompletedAt: $uncompletedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, tag, title, completed);
+  int get hashCode =>
+      Object.hash(id, tag, title, completed, completedAt, uncompletedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -98,7 +137,9 @@ class Task extends DataClass implements Insertable<Task> {
           other.id == this.id &&
           other.tag == this.tag &&
           other.title == this.title &&
-          other.completed == this.completed);
+          other.completed == this.completed &&
+          other.completedAt == this.completedAt &&
+          other.uncompletedAt == this.uncompletedAt);
 }
 
 class TasksCompanion extends UpdateCompanion<Task> {
@@ -106,29 +147,39 @@ class TasksCompanion extends UpdateCompanion<Task> {
   final Value<String?> tag;
   final Value<String> title;
   final Value<bool> completed;
+  final Value<DateTime?> completedAt;
+  final Value<DateTime?> uncompletedAt;
   const TasksCompanion({
     this.id = const Value.absent(),
     this.tag = const Value.absent(),
     this.title = const Value.absent(),
     this.completed = const Value.absent(),
+    this.completedAt = const Value.absent(),
+    this.uncompletedAt = const Value.absent(),
   });
   TasksCompanion.insert({
     this.id = const Value.absent(),
     this.tag = const Value.absent(),
     required String title,
     this.completed = const Value.absent(),
+    this.completedAt = const Value.absent(),
+    this.uncompletedAt = const Value.absent(),
   }) : title = Value(title);
   static Insertable<Task> custom({
     Expression<int>? id,
     Expression<String?>? tag,
     Expression<String>? title,
     Expression<bool>? completed,
+    Expression<DateTime?>? completedAt,
+    Expression<DateTime?>? uncompletedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (tag != null) 'tag': tag,
       if (title != null) 'title': title,
       if (completed != null) 'completed': completed,
+      if (completedAt != null) 'completed_at': completedAt,
+      if (uncompletedAt != null) 'uncompleted_at': uncompletedAt,
     });
   }
 
@@ -136,12 +187,16 @@ class TasksCompanion extends UpdateCompanion<Task> {
       {Value<int>? id,
       Value<String?>? tag,
       Value<String>? title,
-      Value<bool>? completed}) {
+      Value<bool>? completed,
+      Value<DateTime?>? completedAt,
+      Value<DateTime?>? uncompletedAt}) {
     return TasksCompanion(
       id: id ?? this.id,
       tag: tag ?? this.tag,
       title: title ?? this.title,
       completed: completed ?? this.completed,
+      completedAt: completedAt ?? this.completedAt,
+      uncompletedAt: uncompletedAt ?? this.uncompletedAt,
     );
   }
 
@@ -160,6 +215,16 @@ class TasksCompanion extends UpdateCompanion<Task> {
     if (completed.present) {
       map['completed'] = Variable<bool>(completed.value);
     }
+    if (completedAt.present) {
+      final converter = $TasksTable.$converter0;
+      map['completed_at'] =
+          Variable<String?>(converter.mapToSql(completedAt.value));
+    }
+    if (uncompletedAt.present) {
+      final converter = $TasksTable.$converter1;
+      map['uncompleted_at'] =
+          Variable<String?>(converter.mapToSql(uncompletedAt.value));
+    }
     return map;
   }
 
@@ -169,7 +234,9 @@ class TasksCompanion extends UpdateCompanion<Task> {
           ..write('id: $id, ')
           ..write('tag: $tag, ')
           ..write('title: $title, ')
-          ..write('completed: $completed')
+          ..write('completed: $completed, ')
+          ..write('completedAt: $completedAt, ')
+          ..write('uncompletedAt: $uncompletedAt')
           ..write(')'))
         .toString();
   }
@@ -206,8 +273,23 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
       requiredDuringInsert: false,
       defaultConstraints: 'CHECK (completed IN (0, 1))',
       defaultValue: const Constant(false));
+  final VerificationMeta _completedAtMeta =
+      const VerificationMeta('completedAt');
   @override
-  List<GeneratedColumn> get $columns => [id, tag, title, completed];
+  late final GeneratedColumnWithTypeConverter<DateTime, String?> completedAt =
+      GeneratedColumn<String?>('completed_at', aliasedName, true,
+              type: const StringType(), requiredDuringInsert: false)
+          .withConverter<DateTime>($TasksTable.$converter0);
+  final VerificationMeta _uncompletedAtMeta =
+      const VerificationMeta('uncompletedAt');
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, String?> uncompletedAt =
+      GeneratedColumn<String?>('uncompleted_at', aliasedName, true,
+              type: const StringType(), requiredDuringInsert: false)
+          .withConverter<DateTime>($TasksTable.$converter1);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, tag, title, completed, completedAt, uncompletedAt];
   @override
   String get aliasedName => _alias ?? 'tasks';
   @override
@@ -234,6 +316,8 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
       context.handle(_completedMeta,
           completed.isAcceptableOrUnknown(data['completed']!, _completedMeta));
     }
+    context.handle(_completedAtMeta, const VerificationResult.success());
+    context.handle(_uncompletedAtMeta, const VerificationResult.success());
     return context;
   }
 
@@ -249,6 +333,11 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
   $TasksTable createAlias(String alias) {
     return $TasksTable(_db, alias);
   }
+
+  static TypeConverter<DateTime, String> $converter0 =
+      const IsoDateTimeConverter();
+  static TypeConverter<DateTime, String> $converter1 =
+      const IsoDateTimeConverter();
 }
 
 class Tag extends DataClass implements Insertable<Tag> {

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:task_planner/domain/database/task_entity.dart';
+import 'package:task_planner/domain/database/tasks_sorter.dart';
 import 'package:task_planner/domain/database/use_cases/complete_task_use_case.dart';
 import 'package:task_planner/domain/database/use_cases/create_task_use_case.dart';
 import 'package:task_planner/domain/database/use_cases/watch_all_tasks_use_case.dart';
@@ -28,8 +29,7 @@ class TaskOverviewViewModel extends ChangeNotifier {
     _watchAllTasksSubscription?.cancel();
     _watchAllTasksSubscription = _watchAllTasksUseCase().listen((event) {
       _allTasks = event.where((task) => task.title.isNotEmpty).toList();
-      _allTasks.sort(
-          ((a, b) => (a.isCompleted ? 1 : 0).compareTo(b.isCompleted ? 1 : 0)));
+      _allTasks = TasksSorter.sort(_allTasks);
       _isInitialized = true;
       notifyListeners();
     });

@@ -1,9 +1,11 @@
+import 'package:clock/clock.dart';
 import 'package:drift/drift.dart';
 import 'package:meta/meta.dart';
 import 'package:task_planner/domain/database/i_tag_database.dart';
 import 'package:task_planner/domain/database/i_tasks_database.dart';
 import 'package:task_planner/domain/database/tag_entity.dart';
 import 'package:task_planner/domain/database/task_entity.dart';
+import 'package:task_planner/infrastructure/database/converters/iso_date_time_converter.dart';
 import 'package:task_planner/infrastructure/database/tables/tags.dart';
 import 'package:task_planner/infrastructure/database/tables/tasks.dart';
 import 'package:task_planner/infrastructure/database/tags_mapper.dart';
@@ -52,6 +54,7 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
       title: Value(title),
       tag: Value(tag),
       completed: const Value(false),
+      completedAt: const Value(null), //??
     );
     final id = await into(tasks).insert(taskCompanion);
 
@@ -63,14 +66,36 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
     required int id,
     String? title,
     bool? completed,
-  }) =>
-      (update(tasks)..where((task) => task.id.equals(id))).write(
+  }) {
+    if (completed == true) {
+      return (update(tasks)..where((task) => task.id.equals(id))).write(
         TasksCompanion(
           title: title != null ? Value(title) : const Value.absent(),
-          completed:
-              completed != null ? Value(completed) : const Value.absent(),
+          completed: Value(completed!),
+          completedAt: Value(clock.now().toUtc()),
+          uncompletedAt: const Value(null),
         ),
       );
+    } else if (completed == false) {
+      return (update(tasks)..where((task) => task.id.equals(id))).write(
+        TasksCompanion(
+          title: title != null ? Value(title) : const Value.absent(),
+          completed: Value(completed!),
+          completedAt: const Value(null),
+          uncompletedAt: Value(clock.now().toUtc()),
+        ),
+      );
+    } else {
+      return (update(tasks)..where((task) => task.id.equals(id))).write(
+        TasksCompanion(
+          title: title != null ? Value(title) : const Value.absent(),
+          completed: const Value.absent(),
+          completedAt: const Value.absent(),
+          uncompletedAt: const Value.absent(),
+        ),
+      );
+    }
+  }
 
   @override
   Future<void> deleteTask(int id) =>

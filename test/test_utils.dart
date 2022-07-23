@@ -6,11 +6,15 @@ TaskEntity testTaskEntity({
   String? title,
   bool? isCompleted,
   String? tag,
+  DateTime? completedAt,
+  DateTime? uncompletedAt,
 }) =>
     TaskEntity(
       id: id ?? 1,
       title: title ?? '',
       isCompleted: isCompleted ?? false,
+      completedAt: completedAt,
+      uncompletedAt: uncompletedAt,
       tag: tag != null ? testTagEntity(label: tag) : null,
     );
 
