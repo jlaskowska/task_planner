@@ -49,7 +49,7 @@ class TasksOverviewContent extends StatelessWidget {
         title: const Text('Task Planner'),
       ),
       body: AnimatedTaskList(
-        tasks: viewModel.allTasks,
+        tasks: viewModel.allSortedTasks,
         onToggleTaskCompletion: viewModel.toggleCompleteTask,
         onTaskTapped: (id) => Routemaster.of(context).push('/task/$id'),
       ),
@@ -107,11 +107,20 @@ class _AnimatedTaskListState extends State<AnimatedTaskList> {
         );
       }
     } else {
-      final firstCompletedIndex =
-          _tasks.indexWhere((element) => element.isCompleted);
+      // _tasks[index] is now not completed, however local variables have not been updated yet
+      // add it to array with all non-completed tasks and sort by id
+      // the index of _tasks[index] in sortedTasks is where it should be displayed
+      // final sortedTasks = [
+      //   _tasks[index],
+      //   ..._tasks.where((task) => !task.isCompleted).toList()
+      // ]..sort((a, b) => b.id.compareTo(a.id));
+      // final newIndex =
+      //     sortedTasks.indexWhere((task) => task.id == _tasks[index].id);
+
+      const newIndex = 0;
 
       // only animate if position will change
-      if (firstCompletedIndex != index) {
+      if (newIndex != index) {
         _key.currentState!.removeItem(index, (_, animation) {
           return SlideTransition(
             position: Tween<Offset>(
@@ -121,9 +130,9 @@ class _AnimatedTaskListState extends State<AnimatedTaskList> {
           );
         }, duration: const Duration(milliseconds: 400));
 
-        _tasks.insert(firstCompletedIndex, _tasks.removeAt(index));
+        _tasks.insert(newIndex, _tasks.removeAt(index));
         _key.currentState?.insertItem(
-          firstCompletedIndex,
+          newIndex,
           duration: const Duration(milliseconds: 400),
         );
       }

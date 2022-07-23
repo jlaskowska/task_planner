@@ -9,17 +9,17 @@ import '../../../test_utils.dart';
 void main() {
   group('$TaskOverviewViewModel', () {
     late MockCreateTaskUseCase mockCreateTaskUseCase;
-    late MockWatchAllTasksUseCase mockWatchAllTasksUseCase;
+    late MockWatchAllSortedTasksUseCase mockWatchAllSortedTasksUseCase;
     late CompleteTaskUseCase mockCompleteTaskUseCase;
     late TaskOverviewViewModel viewModel;
 
     setUp(() {
       mockCreateTaskUseCase = MockCreateTaskUseCase();
-      mockWatchAllTasksUseCase = MockWatchAllTasksUseCase();
+      mockWatchAllSortedTasksUseCase = MockWatchAllSortedTasksUseCase();
       mockCompleteTaskUseCase = MockCompleteTaskUseCase();
       viewModel = TaskOverviewViewModel(
         createTaskUseCase: mockCreateTaskUseCase,
-        watchAllTasksUseCase: mockWatchAllTasksUseCase,
+        watchAllTasksUseCase: mockWatchAllSortedTasksUseCase,
         completeTaskUseCase: mockCompleteTaskUseCase,
       );
     });
@@ -27,28 +27,28 @@ void main() {
     group('initialize', () {
       test('expect list of tasks where title is not empty', () async {
         final task = testTaskEntity(title: 'title');
-        when(() => mockWatchAllTasksUseCase.call())
+        when(() => mockWatchAllSortedTasksUseCase.call())
             .thenAnswer((_) => Stream.value([task]));
 
         viewModel.initialize();
 
         await Future.delayed(const Duration(milliseconds: 1));
 
-        expect(viewModel.allTasks, [task]);
-        verify(() => mockWatchAllTasksUseCase.call());
+        expect(viewModel.allSortedTasks, [task]);
+        verify(() => mockWatchAllSortedTasksUseCase.call());
       });
 
       test('expect no tasks when title is empty', () async {
         final task = testTaskEntity(title: '');
-        when(() => mockWatchAllTasksUseCase.call())
+        when(() => mockWatchAllSortedTasksUseCase.call())
             .thenAnswer((_) => Stream.value([task]));
 
         viewModel.initialize();
 
         await Future.delayed(const Duration(milliseconds: 1));
 
-        expect(viewModel.allTasks, []);
-        verify(() => mockWatchAllTasksUseCase.call());
+        expect(viewModel.allSortedTasks, []);
+        verify(() => mockWatchAllSortedTasksUseCase.call());
       });
     });
 
