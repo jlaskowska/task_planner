@@ -52,6 +52,7 @@ class TasksOverviewContent extends StatelessWidget {
         tasks: viewModel.allSortedTasks,
         onToggleTaskCompletion: viewModel.toggleCompleteTask,
         onTaskTapped: (id) => Routemaster.of(context).push('/task/$id'),
+        onTaskDismissed: (taskId) => viewModel.deleteTask(taskId),
       ),
     );
   }
@@ -64,11 +65,13 @@ class AnimatedTaskList extends StatefulWidget {
     required bool value,
   }) onToggleTaskCompletion;
   final void Function(int id) onTaskTapped;
+  final void Function(int id) onTaskDismissed;
 
   const AnimatedTaskList({
     required this.tasks,
     required this.onToggleTaskCompletion,
     required this.onTaskTapped,
+    required this.onTaskDismissed,
     Key? key,
   }) : super(key: key);
 
@@ -85,6 +88,13 @@ class _AnimatedTaskListState extends State<AnimatedTaskList> {
     super.initState();
 
     _addItems();
+  }
+
+  void _deleteItem(int index, TaskEntity task) {
+    _key.currentState!.removeItem(index, (_, animation) {
+      return const SizedBox();
+    });
+    _tasks.remove(task);
   }
 
   void _removeItem(int index, bool isCompleted) {
@@ -188,16 +198,25 @@ class _AnimatedTaskListState extends State<AnimatedTaskList> {
             parent: animation,
             curve: Curves.easeOut,
           )),
-          child: TaskTile(
+          child: Dismissible(
             key: Key('taskTile: ${task.id}'),
-            title: task.title,
-            isCompleted: task.isCompleted,
-            tag: task.tag?.label,
-            onChanged: (value) {
-              widget.onToggleTaskCompletion(taskId: task.id, value: value);
-              _removeItem(index, value);
+            background: Container(color: Theme.of(context).primaryColorLight),
+            direction: DismissDirection.endToStart,
+            onDismissed: (DismissDirection direction) {
+              _deleteItem(index, task);
+              widget.onTaskDismissed(task.id);
             },
-            onTap: () => widget.onTaskTapped(task.id),
+            child: TaskTile(
+              key: Key('taskTile: ${task.id}'),
+              title: task.title,
+              isCompleted: task.isCompleted,
+              tag: task.tag?.label,
+              onChanged: (value) {
+                widget.onToggleTaskCompletion(taskId: task.id, value: value);
+                _removeItem(index, value);
+              },
+              onTap: () => widget.onTaskTapped(task.id),
+            ),
           ),
         );
       }),
