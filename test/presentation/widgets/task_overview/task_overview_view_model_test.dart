@@ -12,15 +12,19 @@ void main() {
     late MockWatchAllSortedTasksUseCase mockWatchAllSortedTasksUseCase;
     late CompleteTaskUseCase mockCompleteTaskUseCase;
     late TaskOverviewViewModel viewModel;
+    late MockDeleteTaskUseCase mockDeleteTaskUseCase;
 
     setUp(() {
       mockCreateTaskUseCase = MockCreateTaskUseCase();
       mockWatchAllSortedTasksUseCase = MockWatchAllSortedTasksUseCase();
       mockCompleteTaskUseCase = MockCompleteTaskUseCase();
+      mockDeleteTaskUseCase = MockDeleteTaskUseCase();
+
       viewModel = TaskOverviewViewModel(
         createTaskUseCase: mockCreateTaskUseCase,
         watchAllTasksUseCase: mockWatchAllSortedTasksUseCase,
         completeTaskUseCase: mockCompleteTaskUseCase,
+        deleteTaskUseCase: mockDeleteTaskUseCase,
       );
     });
 
@@ -81,6 +85,18 @@ void main() {
 
         verify(
             () => mockCompleteTaskUseCase.call(id: id, completed: completed));
+      });
+    });
+
+    group('deleteTask', () {
+      test('expect task is deleted', () async {
+        const id = 1;
+
+        when(() => mockDeleteTaskUseCase.call(id: id)).thenAnswer((_) async {});
+
+        await viewModel.deleteTask(id);
+        
+        verify(() => mockDeleteTaskUseCase.call(id: id));
       });
     });
   });
