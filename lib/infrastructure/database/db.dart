@@ -44,7 +44,7 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
   }) async {
     if (tag != null) {
       final tagObject = await (select(tags)
-            ..where((tag1) => tag1.label.equals(tag)))
+            ..where((tag1) => tag1.color.equals(tag)))
           .getSingleOrNull();
       if (tagObject == null) {
         await addTag(tag);
@@ -93,6 +93,11 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
   }
 
   @override
+  Future<void> updateTasksTag({required int id, String? tag}) =>
+      (update(tasks)..where((task) => task.id.equals(id)))
+          .write(TasksCompanion(tag: Value(tag)));
+
+  @override
   Future<void> deleteTask(int id) =>
       (delete(tasks)..where((task) => task.id.equals(id))).go();
 
@@ -109,27 +114,28 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
 
   @override
   Stream<List<TaskEntity>> watchAllTasks() => select(tasks)
-      .join([leftOuterJoin(tags, tags.label.equalsExp(tasks.tag))])
+      .join([leftOuterJoin(tags, tags.color.equalsExp(tasks.tag))])
       .watch()
       .map((rows) => rows.map((row) {
             return TasksMapper.infToDom(row.readTable(tasks));
           }).toList());
 
   @override
-  Future<void> addTag(String label) async {
-    final tag = Tag(label: label);
+  Future<void> addTag(String color) async {
+    final tag = Tag(color: color);
     into(tags).insert(tag);
   }
 
   @override
-  Future<void> deleteTag(String label) async {
-    (update(tasks)..where((task) => task.tag.equals(label))).write(
+  Future<void> deleteTag(String color) async {
+    (update(tasks)..where((task) => task.tag.equals(color))).write(
       const TasksCompanion(tag: Value(null)),
     );
-    (delete(tags)..where((tag) => tag.label.equals(label))).go();
+    (delete(tags)..where((tag) => tag.color.equals(color))).go();
   }
 
   @override
-  Future<List<TagEntity>> getAllTags() =>
-      select(tags).map((tag) => TagsMapper.infToDom(tag)).get();
+  Stream<List<TagEntity>> watchAllTags() =>
+      select(tags).map((tag) => TagsMapper.infToDom(tag)).watch();
+  // select(tags).map((tag) => TagsMapper.infToDom(tag)).get();
 }
