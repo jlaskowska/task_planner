@@ -69,6 +69,20 @@ class TagColors {
   TagColors._();
 
   static const blue = Color(0xff65c2f9);
-  static const yellow = Color(0xfff7b369);
-  static const pink = Color(0xfff9807c);
+  static const orange = Color(0xfff7b369);
+  static const red = Color(0xfff9807c);
+  static const green = Color(0xff61F3BB);
+  static const turquoise = Color(0xff00E7E2);
+  static const pink = Color(0xffF488C3);
+  static const purple = Color(0xffA33370);
+
+  static List<Color> get tagColors => [
+        blue,
+        orange,
+        red,
+        green,
+        turquoise,
+        pink,
+        purple,
+      ];
 }
