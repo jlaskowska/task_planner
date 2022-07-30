@@ -93,7 +93,7 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
   }
 
   @override
-  Future<void> updateTasksTag({required int id, String? tag}) =>
+  Future<void> updateTaskTag({required int id, String? tag}) =>
       (update(tasks)..where((task) => task.id.equals(id)))
           .write(TasksCompanion(tag: Value(tag)));
 
