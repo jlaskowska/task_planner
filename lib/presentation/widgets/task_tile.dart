@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:task_planner/presentation/design.dart';
+import 'package:task_planner/presentation/color_extension.dart';
 import 'package:task_planner/presentation/widgets/animated_completion_ring.dart';
 
 class TaskTile extends StatefulWidget {
   final String title;
-  final String? tag;
+  final String? color;
   final bool isCompleted;
   final VoidCallback onTap;
   final void Function(bool) onChanged;
 
   const TaskTile({
     required this.title,
-    this.tag,
+    this.color,
     required this.onTap,
     this.isCompleted = false,
     required this.onChanged,
@@ -55,8 +55,8 @@ class _TaskTileState extends State<TaskTile> {
                 width: 4,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: widget.tag != null
-                      ? TagColors.pink
+                  color: widget.color != null
+                      ? HexColor.fromHex(widget.color!)
                       : Theme.of(context).scaffoldBackgroundColor,
                   borderRadius: BorderRadius.circular(4),
                 ),
