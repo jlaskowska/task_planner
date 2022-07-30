@@ -19,4 +19,4 @@ TaskEntity testTaskEntity({
 TagEntity testTagEntity({
   String? label,
 }) =>
-    TagEntity(label: label ?? 'label');
+    TagEntity(color: label ?? 'label');

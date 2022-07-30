@@ -17,9 +17,9 @@ final _privateConstructorUsedError = UnsupportedError(
 class _$TagEntityTearOff {
   const _$TagEntityTearOff();
 
-  _TagEntity call({required String label}) {
+  _TagEntity call({required String color}) {
     return _TagEntity(
-      label: label,
+      color: color,
     );
   }
 }
@@ -29,7 +29,7 @@ const $TagEntity = _$TagEntityTearOff();
 
 /// @nodoc
 mixin _$TagEntity {
-  String get label => throw _privateConstructorUsedError;
+  String get color => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TagEntityCopyWith<TagEntity> get copyWith =>
@@ -40,7 +40,7 @@ mixin _$TagEntity {
 abstract class $TagEntityCopyWith<$Res> {
   factory $TagEntityCopyWith(TagEntity value, $Res Function(TagEntity) then) =
       _$TagEntityCopyWithImpl<$Res>;
-  $Res call({String label});
+  $Res call({String color});
 }
 
 /// @nodoc
@@ -53,12 +53,12 @@ class _$TagEntityCopyWithImpl<$Res> implements $TagEntityCopyWith<$Res> {
 
   @override
   $Res call({
-    Object? label = freezed,
+    Object? color = freezed,
   }) {
     return _then(_value.copyWith(
-      label: label == freezed
-          ? _value.label
-          : label // ignore: cast_nullable_to_non_nullable
+      color: color == freezed
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -70,7 +70,7 @@ abstract class _$TagEntityCopyWith<$Res> implements $TagEntityCopyWith<$Res> {
           _TagEntity value, $Res Function(_TagEntity) then) =
       __$TagEntityCopyWithImpl<$Res>;
   @override
-  $Res call({String label});
+  $Res call({String color});
 }
 
 /// @nodoc
@@ -84,12 +84,12 @@ class __$TagEntityCopyWithImpl<$Res> extends _$TagEntityCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? label = freezed,
+    Object? color = freezed,
   }) {
     return _then(_TagEntity(
-      label: label == freezed
-          ? _value.label
-          : label // ignore: cast_nullable_to_non_nullable
+      color: color == freezed
+          ? _value.color
+          : color // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -98,14 +98,14 @@ class __$TagEntityCopyWithImpl<$Res> extends _$TagEntityCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_TagEntity implements _TagEntity {
-  const _$_TagEntity({required this.label});
+  const _$_TagEntity({required this.color});
 
   @override
-  final String label;
+  final String color;
 
   @override
   String toString() {
-    return 'TagEntity(label: $label)';
+    return 'TagEntity(color: $color)';
   }
 
   @override
@@ -113,12 +113,12 @@ class _$_TagEntity implements _TagEntity {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _TagEntity &&
-            const DeepCollectionEquality().equals(other.label, label));
+            const DeepCollectionEquality().equals(other.color, color));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(label));
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(color));
 
   @JsonKey(ignore: true)
   @override
@@ -127,10 +127,10 @@ class _$_TagEntity implements _TagEntity {
 }
 
 abstract class _TagEntity implements TagEntity {
-  const factory _TagEntity({required String label}) = _$_TagEntity;
+  const factory _TagEntity({required String color}) = _$_TagEntity;
 
   @override
-  String get label;
+  String get color;
   @override
   @JsonKey(ignore: true)
   _$TagEntityCopyWith<_TagEntity> get copyWith =>

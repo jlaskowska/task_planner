@@ -10,7 +10,7 @@ class TasksMapper {
         title: task.title,
         completedAt: task.completedAt,
         uncompletedAt: task.uncompletedAt,
-        tag: task.tag != null ? TagEntity(label: task.tag!) : null,
+        tag: task.tag != null ? TagEntity(color: task.tag!) : null,
       );
 
   static Task domToInf(TaskEntity entity) => Task(
@@ -18,6 +18,6 @@ class TasksMapper {
         title: entity.title,
         completedAt: entity.completedAt,
         uncompletedAt: entity.uncompletedAt,
-        tag: entity.tag?.label,
+        tag: entity.tag?.color,
       );
 }
