@@ -210,7 +210,7 @@ class _AnimatedTaskListState extends State<AnimatedTaskList> {
               key: Key('taskTile: ${task.id}'),
               title: task.title,
               isCompleted: task.isCompleted,
-              tag: task.tag?.color,
+              color: task.tag?.color,
               onChanged: (value) {
                 widget.onToggleTaskCompletion(taskId: task.id, value: value);
                 _removeItem(index, value);
