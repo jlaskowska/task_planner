@@ -137,5 +137,4 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
   @override
   Stream<List<TagEntity>> watchAllTags() =>
       select(tags).map((tag) => TagsMapper.infToDom(tag)).watch();
-  // select(tags).map((tag) => TagsMapper.infToDom(tag)).get();
 }
