@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:task_planner/domain/database/tag_entity.dart';
 import 'package:task_planner/presentation/widgets/task_details/task_details_view_model.dart';
 
 class TaskDetails extends StatelessWidget {
@@ -23,6 +25,10 @@ class TaskDetails extends StatelessWidget {
             taskTitle: viewModel.taskTitle!,
             deleteTask: viewModel.deleteTask,
             updtateTaskTitle: viewModel.updateTaskTitle,
+            allTags: viewModel.allTags,
+            addTag: viewModel.addTag,
+            updtateTaskTag: viewModel.updateTasksTag,
+            deleteTag: viewModel.deleteTag,
           );
         }
 
@@ -43,11 +49,19 @@ class TaskDetailsContent extends StatefulWidget {
   final String taskTitle;
   final VoidCallback deleteTask;
   final void Function(String) updtateTaskTitle;
+  final List<TagEntity> allTags;
+  final void Function(String?) updtateTaskTag;
+  final void Function(String) addTag;
+  final void Function(String) deleteTag;
 
   const TaskDetailsContent({
     required this.taskTitle,
     required this.deleteTask,
     required this.updtateTaskTitle,
+    required this.allTags,
+    required this.addTag,
+    required this.updtateTaskTag,
+    required this.deleteTag,
     Key? key,
   }) : super(key: key);
 
@@ -70,6 +84,12 @@ class _TaskDetailsContentState extends State<TaskDetailsContent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () {}, icon: const Icon(MdiIcons.tagPlusOutline)),
+          IconButton(
+              onPressed: () {}, icon: const Icon(MdiIcons.trashCanOutline)),
+        ],
         leading: BackButton(
           onPressed: () async {
             if (_controller.text.isEmpty) {
