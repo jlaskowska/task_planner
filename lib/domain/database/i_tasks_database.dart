@@ -6,6 +6,7 @@ abstract class ITasksDatabase {
   Future<void> updateTaskTag({required int id, String? tag});
   Future<void> deleteTask(int id);
   Future<TaskEntity> getTask(int id);
+  Stream<TaskEntity> watchTask(int id);
   Future<List<TaskEntity>> getAllTasks();
   Stream<List<TaskEntity>> watchAllTasks();
 }
