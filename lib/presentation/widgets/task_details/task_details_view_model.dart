@@ -20,8 +20,7 @@ class TaskDetailsViewModel extends ChangeNotifier {
     AddTagUseCase? addTagUseCase,
     WatchAllTagsUseCase? watchAllTagsUseCase,
     UpdateTaskTagUseCase? updateTasksTagUseCase,
-  })  :
-        _deleteTaskUseCase = deleteTaskUseCase ?? DeleteTaskUseCase(),
+  })  : _deleteTaskUseCase = deleteTaskUseCase ?? DeleteTaskUseCase(),
         _updateTaskTitleUseCase =
             updateTaskTitleUseCase ?? UpdateTaskTitleUseCase(),
         _deleteTagUseCase = deleteTagUseCase ?? DeleteTagUseCase(),
@@ -70,6 +69,7 @@ class TaskDetailsViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _watchAllTagsSubscription?.cancel();
+    _watchTaskSubscription?.cancel();
     super.dispose();
   }
 
