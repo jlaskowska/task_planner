@@ -4,6 +4,7 @@ import 'package:task_planner/domain/database/use_cases/add_tag_use_case.dart';
 import 'package:task_planner/domain/database/use_cases/delete_tag_use_case.dart';
 import 'package:task_planner/domain/database/use_cases/update_task_tag_use_case.dart';
 import 'package:task_planner/domain/database/use_cases/watch_all_tags_use_case.dart';
+import 'package:task_planner/domain/database/use_cases/watch_task_use_case.dart';
 import 'package:task_planner/presentation/widgets/task_details/task_details_view_model.dart';
 
 import '../../../mocks.dart';
@@ -11,7 +12,7 @@ import '../../../test_utils.dart';
 
 void main() {
   group('$TaskDetailsViewModel', () {
-    late MockGetTaskByIdUseCase getTaskByIdUseCase;
+    late WatchTaskUseCase watchTaskUseCase;
     late MockDeleteTaskUseCase deleteTaskUseCase;
     late MockUpdateTaskTitleUseCase updateTaskTitleUseCase;
     late AddTagUseCase addTagUseCase;
@@ -21,21 +22,21 @@ void main() {
     late TaskDetailsViewModel viewModel;
 
     setUp(() {
+      watchTaskUseCase = MockWatchTaskUseCase();
       deleteTaskUseCase = MockDeleteTaskUseCase();
       updateTaskTitleUseCase = MockUpdateTaskTitleUseCase();
-      getTaskByIdUseCase = MockGetTaskByIdUseCase();
       addTagUseCase = MockAddTagUseCase();
       deleteTagUseCase = MockDeleteTagUseCase();
       updateTaskTagUseCase = MockUpdateTaskTagUseCase();
       watchAllTagsUseCase = MockWatchAllTagsUseCase();
       viewModel = TaskDetailsViewModel(
-        getTaskByIdUseCase: getTaskByIdUseCase,
         deleteTaskUseCase: deleteTaskUseCase,
         updateTaskTitleUseCase: updateTaskTitleUseCase,
         watchAllTagsUseCase: watchAllTagsUseCase,
         addTagUseCase: addTagUseCase,
         deleteTagUseCase: deleteTagUseCase,
         updateTasksTagUseCase: updateTaskTagUseCase,
+        watchTaskUseCase: watchTaskUseCase,
       );
     });
     group('initialize', () {
@@ -43,11 +44,8 @@ void main() {
         test('expect isInitizlied & taskTitle', () async {
           const id = 1;
           final taskEnity = testTaskEntity(title: 'title');
-          when(() => getTaskByIdUseCase.call(id))
-              .thenAnswer((_) => Future.value(taskEnity));
-
-          when(() => getTaskByIdUseCase.call(id))
-              .thenAnswer((_) => Future.value(taskEnity));
+          when(() => watchTaskUseCase.call(id))
+              .thenAnswer((_) => Stream.value(taskEnity));
 
           when(() => watchAllTagsUseCase.call())
               .thenAnswer((_) => Stream.value([]));
@@ -58,7 +56,7 @@ void main() {
           expect(viewModel.isInitialized, true);
           expect(viewModel.allTags, []);
 
-          verify(() => getTaskByIdUseCase.call(id));
+          verify(() => watchTaskUseCase.call(id));
         });
       });
 
@@ -71,7 +69,7 @@ void main() {
           expect(viewModel.taskTitle, null);
           expect(viewModel.isInitialized, false);
 
-          verifyNever(() => getTaskByIdUseCase.call(id));
+          verifyNever(() => watchTaskUseCase.call(id));
         });
       });
     });
@@ -80,8 +78,8 @@ void main() {
       test('expect task to be deleted', () async {
         const id = 1;
         final taskEnity = testTaskEntity(id: id);
-        when(() => getTaskByIdUseCase.call(id))
-            .thenAnswer((_) => Future.value(taskEnity));
+        when(() => watchTaskUseCase.call(id))
+            .thenAnswer((_) => Stream.value(taskEnity));
 
         when(() => deleteTaskUseCase.call(id: id))
             .thenAnswer((_) async => () {});
@@ -104,8 +102,8 @@ void main() {
         const newTitle = 'newTitle';
 
         final taskEnity = testTaskEntity(title: title);
-        when(() => getTaskByIdUseCase.call(id))
-            .thenAnswer((_) => Future.value(taskEnity));
+        when(() => watchTaskUseCase.call(id))
+            .thenAnswer((_) => Stream.value(taskEnity));
 
         when(() => updateTaskTitleUseCase.call(id: id, title: newTitle))
             .thenAnswer((_) async => () {});
@@ -125,8 +123,8 @@ void main() {
         const color = '12345678';
         const id = 1;
         final taskEnity = testTaskEntity();
-        when(() => getTaskByIdUseCase.call(id))
-            .thenAnswer((_) => Future.value(taskEnity));
+        when(() => watchTaskUseCase.call(id))
+            .thenAnswer((_) => Stream.value(taskEnity));
 
         when(() => addTagUseCase.call(color: color))
             .thenAnswer((_) async => () {});
@@ -146,8 +144,8 @@ void main() {
         const color = '12345678';
         const id = 1;
         final taskEnity = testTaskEntity();
-        when(() => getTaskByIdUseCase.call(id))
-            .thenAnswer((_) => Future.value(taskEnity));
+        when(() => watchTaskUseCase.call(id))
+            .thenAnswer((_) => Stream.value(taskEnity));
 
         when(() => deleteTagUseCase.call(color: color))
             .thenAnswer((_) async => () {});
@@ -168,8 +166,8 @@ void main() {
         const id = 1;
 
         final taskEntity = testTaskEntity();
-        when(() => getTaskByIdUseCase.call(id))
-            .thenAnswer((_) => Future.value(taskEntity));
+        when(() => watchTaskUseCase.call(id))
+            .thenAnswer((_) => Stream.value(taskEntity));
 
         when(() => updateTaskTagUseCase.call(id: id, tag: color))
             .thenAnswer((_) async => () {});

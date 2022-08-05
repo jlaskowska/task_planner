@@ -9,6 +9,7 @@ import 'package:task_planner/domain/database/use_cases/update_task_tag_use_case.
 import 'package:task_planner/domain/database/use_cases/update_task_title_use_case.dart';
 import 'package:task_planner/domain/database/use_cases/watch_all_sorted_tasks_use_case.dart';
 import 'package:task_planner/domain/database/use_cases/watch_all_tags_use_case.dart';
+import 'package:task_planner/domain/database/use_cases/watch_task_use_case.dart';
 import 'package:task_planner/infrastructure/database/db.dart';
 
 class MockDatabase extends Mock implements Database {}
@@ -34,3 +35,5 @@ class MockDeleteTagUseCase extends Mock implements DeleteTagUseCase {}
 class MockUpdateTaskTagUseCase extends Mock implements UpdateTaskTagUseCase {}
 
 class MockWatchAllTagsUseCase extends Mock implements WatchAllTagsUseCase {}
+
+class MockWatchTaskUseCase extends Mock implements WatchTaskUseCase {}
