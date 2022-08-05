@@ -120,6 +120,9 @@ class Database extends _$Database implements ITasksDatabase, ITagDatabase {
             return TasksMapper.infToDom(row.readTable(tasks));
           }).toList());
 
+    @override
+      Stream<TaskEntity> watchTask(int id) =>  _getTaskQuery(id).watchSingle();
+
   @override
   Future<void> addTag(String color) async {
     final tag = Tag(color: color);

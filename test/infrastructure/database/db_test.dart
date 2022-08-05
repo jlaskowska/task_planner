@@ -243,7 +243,20 @@ void main() {
         await expectation;
       });
     });
+    group('watchTask', () {
+      test('expect stream is updated', () async {
+        const task = TaskEntity(id: id, title: title);
 
+        await db.createTask(title: title);
+
+        final expectation = expectLater(
+          db.watchTask(id),
+          emits(task),
+        );
+
+        await expectation;
+      });
+    });
     group('addTag', () {
       test('expect tag is added to db', () async {
         const color = '12345678';
