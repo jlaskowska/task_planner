@@ -21,7 +21,7 @@ void main() {
     const id = 1;
 
     group('createTask', () {
-      group('when no label is given', () {
+      group('when no tag is given', () {
         test('expect task is inserted into db', () async {
           final task = Task(id: id, title: title);
 
@@ -37,14 +37,14 @@ void main() {
         });
       });
 
-      group('when label is given', () {
-        const tag = 'tag';
+      group('when tag is given', () {
+        const color = '12345678';
         final task = Task(
           id: id,
           title: title,
-          tag: tag,
+          tag: color,
         );
-        final tagDTO = Tag(label: tag);
+        final tagDTO = Tag(color: color);
 
         group('and label does not exist in db', () {
           test('expect task & tag are inserted into db', () async {
@@ -56,7 +56,7 @@ void main() {
               ]),
             );
 
-            await db.createTask(title: title, tag: tag);
+            await db.createTask(title: title, tag: color);
 
             final expectationB = expectLater(
               db.select(db.tasks).watch(),
@@ -70,7 +70,7 @@ void main() {
           });
         });
 
-        group('and label exists in db', () {
+        group('and tag exists in db', () {
           test('expect task is inserted into db', () async {
             await db.into(db.tags).insert(tagDTO);
 
@@ -81,7 +81,7 @@ void main() {
               ]),
             );
 
-            await db.createTask(title: title, tag: tag);
+            await db.createTask(title: title, tag: color);
 
             final expectationB = expectLater(
               db.select(db.tasks).watch(),
@@ -243,11 +243,25 @@ void main() {
         await expectation;
       });
     });
+    group('watchTask', () {
+      test('expect stream is updated', () async {
+        const task = TaskEntity(id: id, title: title);
 
+        await db.createTask(title: title);
+
+        final expectation = expectLater(
+          db.watchTask(id),
+          emits(task),
+        );
+
+        await expectation;
+      });
+    });
     group('addTag', () {
       test('expect tag is added to db', () async {
-        final tag = Tag(label: 'label');
-        await db.addTag('label');
+        const color = '12345678';
+        final tag = Tag(color: color);
+        await db.addTag(color);
 
         final expectation = expectLater(
           db.select(db.tags).watch(),
@@ -259,43 +273,51 @@ void main() {
         await expectation;
       });
     });
+    group(
+      'watchAllTags',
+      () {
+        test('expect stream is updated', () async {
+          const color1 = '12345678';
+          const color2 = '87654321';
+          const tag1 = TagEntity(color: color1);
+          const tag2 = TagEntity(color: color2);
 
-    group('getAllTags', () {
-      group('when tags exist in db', () {
-        test('expect all tags are returned', () async {
-          const tag = TagEntity(label: 'label');
+          await db.addTag(color1);
 
-          await db.addTag('label');
-          final allTags = await db.getAllTags();
+          final expectation = expectLater(
+            db.watchAllTags(),
+            emitsInOrder([
+              [tag1],
+              [],
+              [tag2],
+            ]),
+          );
 
-          expect(allTags, [tag]);
+          await db.deleteTag(color1);
+          await db.addTag(color2);
+
+          await expectation;
         });
-      });
+      },
+      skip: true,
+    );
 
-      group('when tags do not exist in db', () {
-        test('expect empty []', () async {
-          final allTags = await db.getAllTags();
-
-          expect(allTags, []);
-        });
-      });
-    });
     group('deleteTag', () {
       group('when tag exists in db', () {
         test('expect a tag is deleted from db and tasks are updated', () async {
-          const tag = 'tag';
+          const color = '12345678';
           const task = TaskEntity(
             id: id,
             title: title,
-            tag: TagEntity(label: tag),
+            tag: TagEntity(color: color),
           );
           const taskWithoutTag = TaskEntity(
             id: id,
             title: title,
           );
-          final tagDTO = Tag(label: tag);
+          final tagDTO = Tag(color: color);
 
-          await db.createTask(title: title, tag: tag);
+          await db.createTask(title: title, tag: color);
 
           final expectationA = expectLater(
             db.watchAllTasks(),
@@ -312,7 +334,7 @@ void main() {
               []
             ]),
           );
-          await db.deleteTag(tag);
+          await db.deleteTag(color);
 
           await expectationA;
           await expectationB;

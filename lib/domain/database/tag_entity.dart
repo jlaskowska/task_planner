@@ -5,6 +5,6 @@ part 'tag_entity.freezed.dart';
 @freezed
 class TagEntity with _$TagEntity {
   const factory TagEntity({
-    required String label,
+    required String color,
   }) = _TagEntity;
 }

@@ -23,7 +23,7 @@ void main() {
       const taskEntity = TaskEntity(
         id: 1,
         title: 'title',
-        tag: TagEntity(label: 'label'),
+        tag: TagEntity(color: 'label'),
       );
       final task = Task(id: 1, title: 'title', tag: 'label');
 

@@ -305,25 +305,25 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
 }
 
 class Tag extends DataClass implements Insertable<Tag> {
-  final String label;
-  Tag({required this.label});
+  final String color;
+  Tag({required this.color});
   factory Tag.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return Tag(
-      label: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}label'])!,
+      color: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}color'])!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['label'] = Variable<String>(label);
+    map['color'] = Variable<String>(color);
     return map;
   }
 
   TagsCompanion toCompanion(bool nullToAbsent) {
     return TagsCompanion(
-      label: Value(label),
+      color: Value(color),
     );
   }
 
@@ -331,62 +331,62 @@ class Tag extends DataClass implements Insertable<Tag> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Tag(
-      label: serializer.fromJson<String>(json['label']),
+      color: serializer.fromJson<String>(json['color']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'label': serializer.toJson<String>(label),
+      'color': serializer.toJson<String>(color),
     };
   }
 
-  Tag copyWith({String? label}) => Tag(
-        label: label ?? this.label,
+  Tag copyWith({String? color}) => Tag(
+        color: color ?? this.color,
       );
   @override
   String toString() {
     return (StringBuffer('Tag(')
-          ..write('label: $label')
+          ..write('color: $color')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => label.hashCode;
+  int get hashCode => color.hashCode;
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || (other is Tag && other.label == this.label);
+      identical(this, other) || (other is Tag && other.color == this.color);
 }
 
 class TagsCompanion extends UpdateCompanion<Tag> {
-  final Value<String> label;
+  final Value<String> color;
   const TagsCompanion({
-    this.label = const Value.absent(),
+    this.color = const Value.absent(),
   });
   TagsCompanion.insert({
-    required String label,
-  }) : label = Value(label);
+    required String color,
+  }) : color = Value(color);
   static Insertable<Tag> custom({
-    Expression<String>? label,
+    Expression<String>? color,
   }) {
     return RawValuesInsertable({
-      if (label != null) 'label': label,
+      if (color != null) 'color': color,
     });
   }
 
-  TagsCompanion copyWith({Value<String>? label}) {
+  TagsCompanion copyWith({Value<String>? color}) {
     return TagsCompanion(
-      label: label ?? this.label,
+      color: color ?? this.color,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (label.present) {
-      map['label'] = Variable<String>(label.value);
+    if (color.present) {
+      map['color'] = Variable<String>(color.value);
     }
     return map;
   }
@@ -394,7 +394,7 @@ class TagsCompanion extends UpdateCompanion<Tag> {
   @override
   String toString() {
     return (StringBuffer('TagsCompanion(')
-          ..write('label: $label')
+          ..write('color: $color')
           ..write(')'))
         .toString();
   }
@@ -404,16 +404,16 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
   final GeneratedDatabase _db;
   final String? _alias;
   $TagsTable(this._db, [this._alias]);
-  final VerificationMeta _labelMeta = const VerificationMeta('label');
+  final VerificationMeta _colorMeta = const VerificationMeta('color');
   @override
-  late final GeneratedColumn<String?> label = GeneratedColumn<String?>(
-      'label', aliasedName, false,
+  late final GeneratedColumn<String?> color = GeneratedColumn<String?>(
+      'color', aliasedName, false,
       additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 10),
+          GeneratedColumn.checkTextLength(minTextLength: 8, maxTextLength: 8),
       type: const StringType(),
       requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [label];
+  List<GeneratedColumn> get $columns => [color];
   @override
   String get aliasedName => _alias ?? 'tags';
   @override
@@ -423,17 +423,17 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('label')) {
+    if (data.containsKey('color')) {
       context.handle(
-          _labelMeta, label.isAcceptableOrUnknown(data['label']!, _labelMeta));
+          _colorMeta, color.isAcceptableOrUnknown(data['color']!, _colorMeta));
     } else if (isInserting) {
-      context.missing(_labelMeta);
+      context.missing(_colorMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {label};
+  Set<GeneratedColumn> get $primaryKey => {color};
   @override
   Tag map(Map<String, dynamic> data, {String? tablePrefix}) {
     return Tag.fromData(data,

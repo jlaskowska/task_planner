@@ -5,10 +5,10 @@ class TagsMapper {
   TagsMapper._();
 
   static TagEntity infToDom(Tag tag) => TagEntity(
-        label: tag.label,
+        color: tag.color,
       );
 
   static Tag domToInf(TagEntity entity) => Tag(
-        label: entity.label,
+        color: entity.color,
       );
 }

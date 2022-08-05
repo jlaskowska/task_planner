@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
 
 class Tags extends Table {
-  TextColumn get label => text().withLength(min: 1, max: 10)();
+  TextColumn get color => text().withLength(min: 8, max: 8)();
 
   @override
-  Set<Column> get primaryKey => {label};
+  Set<Column> get primaryKey => {color};
 }

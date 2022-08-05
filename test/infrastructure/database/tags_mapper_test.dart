@@ -5,9 +5,9 @@ import 'package:task_planner/infrastructure/database/tags_mapper.dart';
 
 void main() {
   group('$TagsMapper', () {
-    const tagEntity = TagEntity(label: 'label');
-    final tag = Tag(label: 'label');
-    
+    const tagEntity = TagEntity(color: 'label');
+    final tag = Tag(color: 'label');
+
     test('infToDom', () {
       expect(TagsMapper.infToDom(tag), tagEntity);
     });
